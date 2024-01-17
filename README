@@ -1,0 +1,4 @@
+Before upload the project to production.
+Make sure the variable $baseUrl inside /constants/constants.php
+is set to $baseUrl = "https://apimovilgc.dasgalu.net";
+For local development, please use $baseUrl = "http://localhost:8081";
