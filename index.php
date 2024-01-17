@@ -17,15 +17,17 @@
             $dbRes = $dbService->connectToAdmin();       
             $clientDB = $dbRes->fetch_array();
             $clientDBName = $urlPayload['prefix'].'_'.$clientDB['datos'];
+            // $clientDBUser = $urlPayload['prefix'].'_'.$clientDB['usuario'];
             $dbService->closeConnection();
             // -- Create a new connection for client db.
-            $userConn = new UserService($dbUrl, $urlPayload['user'], $urlPayload['password'], $clientDBName);            
-            $session->initializeSession($dbSession, array("dbUrl" => $dbUrl, "user" => $urlPayload['user'], "password" => $urlPayload['password'], "dbName" => $clientDBName));
+            $userConn = new UserService($dbUrl, $urlPayload["user"], $urlPayload['password'], $clientDBName);            
+            $session->initializeSession($dbSession, array("dbUrl" => $dbUrl, "user" => $urlPayload['user'], "password" => $urlPayload['password'], "dbName" => $clientDBName, "residence"=>$clientDB["nombre"]));
             $res = $userConn->getUserByEmail($urlPayload['email']);
             header("HTTP/1.1 200 OK");
             echo json_encode($res->fetch_array());
             $userConn->closeConnection();
         } else {
+            header("HTTP/1.1 500 ERROR");
             $msg = array("message"=>"Please provide the customer code you would like to autenticate.");
             echo json_encode($msg);
         }
@@ -35,6 +37,7 @@
         switch ($requestString) {
             case '/?login':                                
                 if($urlPayload == null || !(array_key_exists('password', $urlPayload) || array_key_exists('email', $urlPayload))) {
+                    header("HTTP/1.1 400 OK");
                     $msg = array("message"=>"Please provide user credentials");
                     echo json_encode($msg);
                     break;
@@ -42,13 +45,15 @@
                 $email = $urlPayload['email'];
                 $pass = $urlPayload['password'];
                 $auth = new AuthLogin();
-                $aut = $auth->login($email, $pass);
+                $user = $auth->login($email, $pass);
                 $token = sprintf("%s-%s", $email, date("Y-m-d"));                
-                if($aut) {
-                    $msg = array("message"=>"success", "code"=>"200", "access_token"=> base64_encode($token));
+                if($user != null) {
+                    header("HTTP/1.1 200 OK");
+                    $msg = array("message"=>"success", "code"=>"200", "access_token"=> base64_encode($token), "residence"=>$session->getSession("userConn")["residence"], "name"=>$user["name"]);
                     echo json_encode($msg);
                     break;
                 } else {
+                    header("HTTP/1.1 400 OK");
                     $msg = array("message"=>"Incorrect credentials. Please verify.", "code"=>"400");
                     echo json_encode($msg);
                     break;

@@ -12,9 +12,9 @@
                 $raw = $conn->getUserByEmail($email);                
                 $user = $raw->fetch_array();
                 if(password_verify($password, $user['password'])) {
-                    return true;
+                    return $user;
                 } else {
-                    return false;
+                    return null;
                 }
             }
         }
