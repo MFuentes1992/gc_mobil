@@ -8,22 +8,20 @@
     // -- Default Admin credentials
     session_start();
     $session = new SessionManager();
-    $jsonPayload = file_get_contents('php://input');
+    $urlPayload = $_POST;
     if(!$session->sessionExists($dbSession)) {
         // -- Cliend credentials
-        
-        $clientData  = json_decode($jsonPayload, true);
-        if(array_key_exists('code', $clientData)){
+        if(isset($urlPayload['code'])){
             // -- Create connection to db Admins and retrieve the corresponding DB.
-            $dbService = new DBService($dbUrl, $dbUser, $dbPass, $dbName, $clientData['code']); 
+            $dbService = new DBService($dbUrl, $dbUser, $dbPass, $dbName, $urlPayload['code']); 
             $dbRes = $dbService->connectToAdmin();       
             $clientDB = $dbRes->fetch_array();
-            $clientDBName = $clientData['prefix'].'_'.$clientDB['datos'];
+            $clientDBName = $urlPayload['prefix'].'_'.$clientDB['datos'];
             $dbService->closeConnection();
             // -- Create a new connection for client db.
-            $userConn = new UserService($dbUrl, $clientData['user'], $clientData['password'], $clientDBName);            
-            $session->initializeSession($dbSession, array("dbUrl" => $dbUrl, "user" => $clientData['user'], "password" => $clientData['password'], "dbName" => $clientDBName));
-            $res = $userConn->getUserByEmail($clientData['email']);
+            $userConn = new UserService($dbUrl, $urlPayload['user'], $urlPayload['password'], $clientDBName);            
+            $session->initializeSession($dbSession, array("dbUrl" => $dbUrl, "user" => $urlPayload['user'], "password" => $urlPayload['password'], "dbName" => $clientDBName));
+            $res = $userConn->getUserByEmail($urlPayload['email']);
             header("HTTP/1.1 200 OK");
             echo json_encode($res->fetch_array());
             $userConn->closeConnection();
@@ -35,15 +33,14 @@
         $requestUrl = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
         $requestString = substr($requestUrl, strlen($baseUrl));        
         switch ($requestString) {
-            case '/?login':                
-                $payload  = json_decode($jsonPayload, true);
-                if($payload == null || !(array_key_exists('password', $payload) || array_key_exists('email', $payload))) {
+            case '/?login':                                
+                if($urlPayload == null || !(array_key_exists('password', $urlPayload) || array_key_exists('email', $urlPayload))) {
                     $msg = array("message"=>"Please provide user credentials");
                     echo json_encode($msg);
                     break;
                 }
-                $email = $payload['email'];
-                $pass = $payload['password'];
+                $email = $urlPayload['email'];
+                $pass = $urlPayload['password'];
                 $auth = new AuthLogin();
                 $aut = $auth->login($email, $pass);
                 $token = sprintf("%s-%s", $email, date("Y-m-d"));                
