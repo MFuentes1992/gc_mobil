@@ -11,7 +11,7 @@
                 $conn = new UserService($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
                 $raw = $conn->getUserByEmail($email);                
                 $user = $raw->fetch_array();
-                if(password_verify($password, $user['password'])) {
+                if(isset($user) && password_verify($password, $user['password'])) {
                     return $user;
                 } else {
                     return null;

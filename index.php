@@ -17,14 +17,15 @@
             $dbRes = $dbService->connectToAdmin();       
             $clientDB = $dbRes->fetch_array();
             $clientDBName = $urlPayload['prefix'].'_'.$clientDB['datos'];
-            // $clientDBUser = $urlPayload['prefix'].'_'.$clientDB['usuario'];
+            $clientDBUser = $urlPayload['prefix'].'_'.$clientDB['usuario'];
             $dbService->closeConnection();
             // -- Create a new connection for client db.
-            $userConn = new UserService($dbUrl, $urlPayload["user"], $urlPayload['password'], $clientDBName);            
-            $session->initializeSession($dbSession, array("dbUrl" => $dbUrl, "user" => $urlPayload['user'], "password" => $urlPayload['password'], "dbName" => $clientDBName, "residence"=>$clientDB["nombre"]));
-            $res = $userConn->getUserByEmail($urlPayload['email']);
+            $userConn = new UserService($dbUrl, $clientDBUser, $clientDB['acceso'], $clientDBName);            
+            $session->initializeSession($dbSession, array("dbUrl" => $dbUrl, "user" => $clientDBUser, "password" => $clientDB['acceso'], "dbName" => $clientDBName, "residence"=>$clientDB["nombre"]));
+            //$res = $userConn->getUserByEmail($urlPayload['email']);
+            $res = array("message"=>"DB is selected for user: ".$clientDBName);
             header("HTTP/1.1 200 OK");
-            echo json_encode($res->fetch_array());
+            echo json_encode($res);
             $userConn->closeConnection();
         } else {
             header("HTTP/1.1 500 ERROR");
@@ -63,7 +64,9 @@
                 session_unset();
                 break;
             default:
-                # code...
+                header("HTTP/1.1 200 OK");
+                $msg = array("message"=>"Existing connection.");
+                echo json_encode($msg);
                 break;
         }
     }  
