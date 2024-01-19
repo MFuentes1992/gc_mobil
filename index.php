@@ -33,10 +33,11 @@
             echo json_encode($msg);
         }
     }  else {
+        // $requestUrl = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
         $requestUrl = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-        $requestString = substr($requestUrl, strlen($baseUrl));        
+        $requestString = substr($requestUrl, strlen($baseUrl));   
         switch ($requestString) {
-            case '/?login':                                
+            case '?login':                                
                 if($urlPayload == null || !(array_key_exists('password', $urlPayload) || array_key_exists('email', $urlPayload))) {
                     header("HTTP/1.1 400 OK");
                     $msg = array("message"=>"Please provide user credentials");
@@ -54,13 +55,13 @@
                     echo json_encode($msg);
                     break;
                 } else {
-                    header("HTTP/1.1 400 OK");
+                    header("HTTP/1.1 400 ERROR");
                     $msg = array("message"=>"Incorrect credentials. Please verify.", "code"=>"400");
                     echo json_encode($msg);
                     break;
                 }
                 break;
-            case '/?logout': 
+            case '?logout': 
                 session_unset();
                 break;
             default:
