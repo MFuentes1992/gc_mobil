@@ -16,7 +16,7 @@
         $msg = array("estatus"=> "200", "message"=>"Record created successfully");
         echo json_encode($msg); 
     } else {
-        header("HTTP/1.1 200 OK");
+        header("HTTP/1.1 400 ERROR");
         $msg = array("estatus"=> "400", "message"=>"Something went wrong");
         echo json_encode($msg);    
     }

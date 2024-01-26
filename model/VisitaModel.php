@@ -18,6 +18,32 @@
                 echo $th;
             }            
         }
+
+        public function getAllvisitByOwner(string $email) {
+            try {                
+                $query = sprintf("SELECT 
+                v.nombre_visita as nombre,
+                v.fecha_ingreso as desde, 
+                v.fecha_salida as hasta,
+                 ti.tipo_ingreso as tipo, 
+                v.multiple_entrada as acceso, 
+                v.notificaciones as avisos, 
+                u.email,
+                tv.tipo_visita,
+                v.uniqueID,
+                v.estatus_registro as estado
+            FROM visitas as v RIGHT JOIN users as u
+            ON v.id_usuario =  u.id
+            JOIN lst_tipo_ingreso_visita as ti 
+            ON v.id_tipo_ingreso = ti.id
+            JOIN lst_tipo_visita as tv
+            ON v.id_tipo_visita = tv.id
+            WHERE u.email = '%s' AND v.estatus_registro = 1", $email);
+                return $this->execQuery($query);                   
+            } catch (\Throwable $th) {
+                echo $th;
+            }   
+        }
     }
 
 ?>

@@ -9,14 +9,14 @@ SELECT
 	u.email,
 	tv.tipo_visita,
 	v.uniqueID,
-    v.estatus as estado
+    v.estatus_registro as estado
 FROM visitas as v RIGHT JOIN users as u
 ON v.id_usuario =  u.id
 JOIN lst_tipo_ingreso_visita as ti 
-ON v.id_ingreso = ti.id
+ON v.id_tipo_ingreso = ti.id
 JOIN lst_tipo_visita as tv
 ON v.id_tipo_visita = tv.id
-WHERE u.email = 'admin@admin.com' AND v.estatus = 1
+WHERE u.email = 'rocio@email.com' AND v.estatus_registro = 1
 
 ## --- Get all active visits By Type
 
