@@ -153,11 +153,11 @@ SELECT
         r.estado as estado,
         r.codigo_postal as cp,
     v.estatus as estado
-FROM tbl_visitas as v RIGHT JOIN users as u
+FROM visitas as v RIGHT JOIN users as u
 ON v.id_usuario =  u.id
-JOIN lst_TipoIngreso as ti 
+JOIN lst_tipo_ingreso_visita as ti 
 ON v.id_ingreso = ti.id    
-JOIN lst_TipoVisita as tv  
+JOIN lst_tipo_visita as tv  
 ON v.id_tipo_visita = tv.id
 JOIN instalaciones as i
 ON i.id = u.id_instalacion
