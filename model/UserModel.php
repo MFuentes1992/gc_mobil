@@ -6,7 +6,7 @@
         }
         public function getUserByEmail(string $email) {
             try {                
-                $query = sprintf("SELECT * FROM users WHERE email = '%s' AND status = 1", $email);
+                $query = sprintf("SELECT u.id, u.name, u.email, u.id_instalacion, u.password FROM users as u WHERE u.email = '%s' AND status = 1", $email);                
                 return $this->execQuery($query);                   
             } catch (\Throwable $th) {
                 echo $th;

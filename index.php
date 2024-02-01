@@ -21,7 +21,7 @@
             $dbService->closeConnection();
             // -- Create a new connection for client db.
             $userConn = new UserService($dbUrl, $clientDBUser, $clientDB['acceso'], $clientDBName);            
-            $session->initializeSession($dbSession, array("dbUrl" => $dbUrl, "user" => $clientDBUser, "password" => $clientDB['acceso'], "dbName" => $clientDBName, "residence"=>$clientDB["nombre"]));
+            $session->initializeSession($dbSession, array("dbUrl" => $dbUrl, "user" => $clientDBUser, "password" => $clientDB['acceso'], "dbName" => $clientDBName));
             //$res = $userConn->getUserByEmail($urlPayload['email']);
             $res = array("message"=>"DB is selected for user: ".$clientDBName);
             header("HTTP/1.1 200 OK");

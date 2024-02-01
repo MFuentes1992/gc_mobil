@@ -8,6 +8,7 @@
     $connValues = $session->getSession("userConn");
     $model = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
     $res = $model->createVisita(intval($payload["idUsuario"]), intval($payload["tipoVisita"]), intval($payload["tipoIngreso"]),
+    $payload["idInstalacion"],
     $payload["fechaIngreso"], $payload["fechaSalida"],
     intval($payload["multEntry"]), intval($payload["notificacion"]), $payload["nombre"],
     1);

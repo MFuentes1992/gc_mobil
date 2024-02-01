@@ -32,6 +32,7 @@ CREATE TABLE `visitas` (
   `id_usuario` int NOT NULL,
   `id_tipo_visita` int NOT NULL,
   `id_tipo_ingreso` int NOT NULL,
+  `id_instalacion` int NOT NULL,
   `fecha_ingreso` varchar(255) NOT NULL,
   `fecha_salida` varchar(255) NOT NULL,
   `multiple_entrada` tinyint(1) NOT NULL,
