@@ -50,7 +50,7 @@
                 $token = sprintf("%s-%s", $email, date("Y-m-d"));                
                 if($user != null) {
                     header("HTTP/1.1 200 OK");
-                    $msg = array("message"=>"success", "code"=>"200", "access_token"=> base64_encode($token), "residence"=>$session->getSession("userConn")["residence"], "name"=>$user["name"], "id"=>$user["id"], "instalaciones"=>$user["id_instalacion"]);
+                    $msg = array("message"=>"success", "code"=>"200", "access_token"=> base64_encode($token), "name"=>$user["name"], "id"=>$user["id"], "instalaciones"=>$user["id_instalacion"]);
                     echo json_encode($msg);
                     break;
                 } else {
