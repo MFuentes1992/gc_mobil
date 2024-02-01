@@ -21,7 +21,7 @@
             $dbService->closeConnection();
             // -- Create a new connection for client db.
             $userConn = new UserService($dbUrl, $clientDBUser, $clientDB['acceso'], $clientDBName);            
-            $session->initializeSession($dbSession, array("dbUrl" => $dbUrl, "user" => $clientDBUser, "password" => $clientDB['acceso'], "dbName" => $clientDBName, "residence"=>$clientDB["nombre"]));
+            $session->initializeSession($dbSession, array("dbUrl" => $dbUrl, "user" => $clientDBUser, "password" => $clientDB['acceso'], "dbName" => $clientDBName));
             //$res = $userConn->getUserByEmail($urlPayload['email']);
             $res = array("message"=>"DB is selected for user: ".$clientDBName);
             header("HTTP/1.1 200 OK");
@@ -50,7 +50,7 @@
                 $token = sprintf("%s-%s", $email, date("Y-m-d"));                
                 if($user != null) {
                     header("HTTP/1.1 200 OK");
-                    $msg = array("message"=>"success", "code"=>"200", "access_token"=> base64_encode($token), "residence"=>$session->getSession("userConn")["residence"], "name"=>$user["name"], "id"=>$user["id"], "instalaciones"=>$user["id_instalacion"]);
+                    $msg = array("message"=>"success", "code"=>"200", "access_token"=> base64_encode($token), "name"=>$user["name"], "id"=>$user["id"], "instalaciones"=>$user["id_instalacion"]);
                     echo json_encode($msg);
                     break;
                 } else {
