@@ -8,11 +8,13 @@ $session = new SessionManager();
 $connValues = $session->getSession("userConn");
 $model = new InstalacionesModel($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
 $res = $model->getAllInstalaciones(explode(',',$query["ids"]));
-if($res) {
-    header("HTTP/1.1 200 OK");
+if($res) {    
+    $arr = array();
     while($row = $res->fetch_array()) {
-        echo json_encode($row);
+        array_push($arr, $row);        
     }
+    header("HTTP/1.1 200 OK");
+    echo json_encode($arr);
 } else {
     header("HTTP/1.1 500 ERROR");
     $msg = array("message"=>"No se encontraron instalaciones para el usuario.");

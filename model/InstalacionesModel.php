@@ -7,6 +7,7 @@ class InstalacionesModel extends Connection {
     public function getAllInstalaciones($instalaciones) {
         try {                 
             $query = vsprintf("SELECT
+            i.id as id,
             i.seccion as manzana,
             i.numero as num_int,
             r.nombre as residencial,
