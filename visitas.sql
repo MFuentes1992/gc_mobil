@@ -165,6 +165,39 @@ JOIN recintos as r
 ON r.id = i.id_recinto
 WHERE i.id = 50 and u.email = 'rocio@email.com' AND v.estatus_registro = 1
 
+## -- Get All visits by residence numer and land owner and type of visits
+SELECT
+        v.nombre_visita as nombre,
+        v.fecha_ingreso as desde,
+        v.fecha_salida as hasta,
+        ti.tipo_ingreso as tipo,
+        v.multiple_entrada as multiple_entrada,
+        v.notificaciones as notificaciones,
+        u.email as emailAutor,
+        tv.tipo_visita,
+        v.uniqueID,
+        i.seccion as seccion,
+        i.numero as num_int,
+        r.nombre as residencial,
+        r.calle as calle,
+        r.numero_ext as num_ext,
+        r.colonia as colonia,
+        r.ciudad as ciudad,
+        r.estado as estado,
+        r.codigo_postal as cp,
+    v.estatus_registro as estado
+FROM visitas as v RIGHT JOIN users as u
+ON v.id_usuario =  u.id
+JOIN lst_tipo_ingreso_visita as ti 
+ON v.id_tipo_ingreso = ti.id    
+JOIN lst_tipo_visita as tv  
+ON v.id_tipo_visita = tv.id
+JOIN instalaciones as i
+ON i.id = u.id_instalacion
+JOIN recintos as r
+ON r.id = i.id_recinto
+WHERE i.id = 50 and u.email = 'rocio@email.com' AND v.estatus_registro = 1 AND tv.id = 1
+
 
 SELECT 
 	i.seccion as manzana,
