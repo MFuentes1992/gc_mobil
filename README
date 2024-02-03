@@ -2,3 +2,86 @@ Before upload the project to production.
 Make sure the variable $baseUrl inside /constants/constants.php
 is set to $baseUrl = "https://apimovilgc.dasgalu.net";
 For local development, please use $baseUrl = "http://localhost:8081";
+
+# Index
+
+- For Local development: `$requestUrl = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];`
+- For Prod release: `$requestUrl = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];`
+
+## For local development:
+
+```
+            switch ($requestString) {
+            case '/?login':
+                if($urlPayload == null || !(array_key_exists('password', $urlPayload) || array_key_exists('email', $urlPayload))) {
+                    header("HTTP/1.1 400 OK");
+                    $msg = array("message"=>"Please provide user credentials");
+                    echo json_encode($msg);
+                    break;
+                }
+                $email = $urlPayload['email'];
+                $pass = $urlPayload['password'];
+                $auth = new AuthLogin();
+                $user = $auth->login($email, $pass);
+                $token = sprintf("%s-%s", $email, date("Y-m-d"));
+                if($user != null) {
+                    header("HTTP/1.1 200 OK");
+                    $msg = array("message"=>"success", "code"=>"200", "access_token"=> base64_encode($token), "name"=>$user["name"], "id"=>$user["id"], "instalaciones"=>$user["id_instalacion"]);
+                    echo json_encode($msg);
+                    break;
+                } else {
+                    header("HTTP/1.1 400 OK");
+                    $msg = array("message"=>"Incorrect credentials. Please verify.", "code"=>"400");
+                    echo json_encode($msg);
+                    break;
+                }
+                break;
+            case '/?logout':
+                session_unset();
+                break;
+            default:
+                header("HTTP/1.1 200 OK");
+                $msg = array("message"=>"Existing connection.");
+                echo json_encode($msg);
+                break;
+        }
+```
+
+## PROD release
+
+```
+        switch ($requestString) {
+            case '?login':
+                if($urlPayload == null || !(array_key_exists('password', $urlPayload) || array_key_exists('email', $urlPayload))) {
+                    header("HTTP/1.1 400 OK");
+                    $msg = array("message"=>"Please provide user credentials");
+                    echo json_encode($msg);
+                    break;
+                }
+                $email = $urlPayload['email'];
+                $pass = $urlPayload['password'];
+                $auth = new AuthLogin();
+                $user = $auth->login($email, $pass);
+                $token = sprintf("%s-%s", $email, date("Y-m-d"));
+                if($user != null) {
+                    header("HTTP/1.1 200 OK");
+                    $msg = array("message"=>"success", "code"=>"200", "access_token"=> base64_encode($token), "name"=>$user["name"], "id"=>$user["id"], "instalaciones"=>$user["id_instalacion"]);
+                    echo json_encode($msg);
+                    break;
+                } else {
+                    header("HTTP/1.1 400 OK");
+                    $msg = array("message"=>"Incorrect credentials. Please verify.", "code"=>"400");
+                    echo json_encode($msg);
+                    break;
+                }
+                break;
+            case '?logout':
+                session_unset();
+                break;
+            default:
+                header("HTTP/1.1 200 OK");
+                $msg = array("message"=>"Existing connection.");
+                echo json_encode($msg);
+                break;
+        }
+```
