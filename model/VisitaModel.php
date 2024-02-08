@@ -84,7 +84,7 @@
             }   
         }
 
-        public function getAllVisitsByInstalacionType(int $idInstalacion, int $tipoVisita, string $email) {
+        public function getAllVisitsByInstalacionType(int $idInstalacion, string $tipoVisita, string $email) {
             try {                
                 $query = sprintf("SELECT
                 v.nombre_visita as nombre,
@@ -116,7 +116,7 @@
         ON i.id = u.id_instalacion
         JOIN recintos as r
         ON r.id = i.id_recinto
-        WHERE i.id = %d and u.email = '%s' AND v.estatus_registro = 1 AND tv.id = %d", $idInstalacion, $email, $tipoVisita);        
+        WHERE i.id = %d and u.email = '%s' AND v.estatus_registro = 1 AND tv.id in (%s)", $idInstalacion, $email, $tipoVisita);        
                 return $this->execQuery($query);                   
             } catch (\Throwable $th) {
                 echo $th;

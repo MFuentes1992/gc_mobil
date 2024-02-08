@@ -7,7 +7,7 @@
     $session = new SessionManager();
     $connValues = $session->getSession("userConn");
     $model = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
-    $res = $model->getAllVisitsByInstalacionType(intval($query['idInstalacion']), intval($query["idTipoVisita"]),   $query["email"]);
+    $res = $model->getAllVisitsByInstalacionType(intval($query['idInstalacion']), $query["idTipoVisita"],   $query["email"]);
     if($res) {
         $responseArr = array();        
         while($row = $res->fetch_array()) {
