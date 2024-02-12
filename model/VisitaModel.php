@@ -74,10 +74,10 @@
         JOIN lst_tipo_visita as tv  
         ON v.id_tipo_visita = tv.id
         JOIN instalaciones as i
-        ON i.id = u.id_instalacion
+        ON i.id = %d
         JOIN recintos as r
         ON r.id = i.id_recinto
-        WHERE i.id = %d and u.email = '%s' AND v.estatus_registro = 1", $idInstalacion, $email);             
+        WHERE v.id_instalacion = %d and u.email = '%s' AND v.estatus_registro = 1", $idInstalacion, $idInstalacion, $email);             
                 return $this->execQuery($query);                   
             } catch (\Throwable $th) {
                 echo $th;
@@ -113,10 +113,10 @@
         JOIN lst_tipo_visita as tv  
         ON v.id_tipo_visita = tv.id
         JOIN instalaciones as i
-        ON i.id = u.id_instalacion
+        ON i.id = %d
         JOIN recintos as r
         ON r.id = i.id_recinto
-        WHERE i.id = %d and u.email = '%s' AND v.estatus_registro = 1 AND tv.id in (%s)", $idInstalacion, $email, $tipoVisita);        
+        WHERE v.id_instalacion = %d and u.email = '%s' AND v.estatus_registro = 1 AND tv.id in (%s)", $idInstalacion, $idInstalacion, $email, $tipoVisita);        
                 return $this->execQuery($query);                   
             } catch (\Throwable $th) {
                 echo $th;
