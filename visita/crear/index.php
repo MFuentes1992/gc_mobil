@@ -14,7 +14,7 @@
     1);
     if($res) {
         header("HTTP/1.1 200 OK");
-        $msg = array("estatus"=> "200", "message"=>"Record created successfully");
+        $msg = array("estatus"=> "200", "message"=>"Record created successfully", "uniqueID"=>$res);
         echo json_encode($msg); 
     } else {
         header("HTTP/1.1 400 ERROR");
