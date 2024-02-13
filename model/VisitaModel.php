@@ -6,14 +6,20 @@
         }
         public function createVisita(int $idUsuario, int $idTipoVisita, int $idTipoIngreso, int $idInstalacion, string $fechaIngreso, string $fechaSalida,
             int $multipleEntrada, int $notificaciones, string $nombreVisita, int $estatusRegistro) {
-            try {                
+            try {  
+                $uniqueID = uniqid('', true);              
                 $query = sprintf("INSERT INTO `visitas` 
                     (`id_usuario`, `id_tipo_visita`, `id_tipo_ingreso`, `id_instalacion`, `fecha_ingreso`, `fecha_salida`, 
                     `multiple_entrada`, `notificaciones`, `uniqueID`, `nombre_visita`, `fecha_registro`, `fecha_actualizacion` ,`estatus_registro`) 
                     VALUES (%d, %d, %d, %d, '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', %d)", 
                     $idUsuario, $idTipoVisita, $idTipoIngreso, $idInstalacion, $fechaIngreso, $fechaSalida, $multipleEntrada,
-                    $notificaciones, uniqid('', true), $nombreVisita, date("Y-m-d H:i:s"), date("Y-m-d H:i:s"), $estatusRegistro);
-                return $this->execQuery($query);                   
+                    $notificaciones, $uniqueID, $nombreVisita, date("Y-m-d H:i:s"), date("Y-m-d H:i:s"), $estatusRegistro);
+                $res = $this->execQuery($query);
+                    if($res) {
+                        return $uniqueID;
+                    } else {
+                        return false;
+                    }                  
             } catch (\Throwable $th) {
                 echo $th;
             }            
