@@ -6,12 +6,14 @@
     $payload = $_POST;
     $session = new SessionManager();
     $connValues = $session->getSession("userConn");
-    $model = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
+    $model = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);    
     $res = $model->createVisita(intval($payload["idUsuario"]), intval($payload["tipoVisita"]), intval($payload["tipoIngreso"]),
     $payload["idInstalacion"],
     $payload["fechaIngreso"], $payload["fechaSalida"],
     intval($payload["multEntry"]), intval($payload["notificacion"]), $payload["nombre"],
-    1);
+    1, isset($payload["vehicle_model"]) ? $payload["vehicle_model"] : "", 
+    isset($payload["vehicle_plate"]) ? $payload["vehicle_plate"] : "", 
+    isset($payload["vehicle_color"]) ? $payload["vehicle_color"] : "");
     if($res) {
         header("HTTP/1.1 200 OK");
         $msg = array("estatus"=> "200", "message"=>"Record created successfully", "uniqueID"=>$res);
