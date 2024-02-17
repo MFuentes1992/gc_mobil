@@ -12,7 +12,7 @@
         while($row = $res->fetch_array()) {
             array_push($resArr, array(
                 "id" => $row["id"],
-                "tipo_visita" => $row["tipo_ingreso"],
+                "tipo_ingreso" => $row["tipo_ingreso"],
                 "descripcion" => $row["descripcion"],
             ));
         }
