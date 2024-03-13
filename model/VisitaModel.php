@@ -5,19 +5,31 @@
             parent::__construct($dbUrl, $dbUser, $dbPass, $dbName);
         }        
         public function createVisita(int $idUsuario, int $idTipoVisita, int $idTipoIngreso, int $idInstalacion, string $fechaIngreso, string $fechaSalida,
-        int $multipleEntrada, int $notificaciones, string $nombreVisita, int $estatusRegistro, string $vehicleModel, string $vehiclePlates, string $vehicleColor) {
+        int $multipleEntrada, int $notificaciones, string $nombreVisita, int $estatusRegistro, string $vehicles) {
         try {  
             $uniqueID = uniqid('', true);              
             $query = sprintf("INSERT INTO `visitas` 
                 (`id_usuario`, `id_tipo_visita`, `id_tipo_ingreso`, `id_instalacion`, `fecha_ingreso`, `fecha_salida`, 
-                `multiple_entrada`, `notificaciones`, `uniqueID`, `nombre_visita`, `fecha_registro`, `fecha_actualizacion` ,`estatus_registro`,
-                `modelo_vehiculo`, `color_vehiculo`, `placa_vehiculo`) 
-                VALUES (%d, %d, %d, %d, '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', %d, '%s', '%s', '%s')", 
+                `multiple_entrada`, `notificaciones`, `uniqueID`, `nombre_visita`, `fecha_registro`, `fecha_actualizacion` ,`estatus_registro`) 
+                VALUES (%d, %d, %d, %d, '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', %d)", 
                 $idUsuario, $idTipoVisita, $idTipoIngreso, $idInstalacion, $fechaIngreso, $fechaSalida, $multipleEntrada,
-                $notificaciones, $uniqueID, $nombreVisita, date("Y-m-d H:i:s"), date("Y-m-d H:i:s"), $estatusRegistro,
-                $vehicleModel, $vehicleColor, $vehiclePlates);            
+                $notificaciones, $uniqueID, $nombreVisita, date("Y-m-d H:i:s"), date("Y-m-d H:i:s"), $estatusRegistro);            
             $res = $this->execQuery($query);
                 if($res) {
+                    $lastId = $this->getConnection()->insert_id;                    
+                    $data = json_decode($vehicles, true);                                      ;                                      
+                    foreach($data as $vehicle) {                        
+                        $vehicleBrand = $vehicle["brand"];
+                        $vehicleModel = $vehicle["model"];
+                        $vehicleYear = $vehicle["year"];
+                        $vehiclePlates = $vehicle["plates"];
+                        $vehicleColor = $vehicle["color"];
+                        if($vehicleModel != "" && $vehiclePlates != "" 
+                        && $vehicleColor != "" && $vehicleYear != "" 
+                        && $vehicleBrand != "") {                                                                     
+                            $this->createVehiculoVisita($lastId, $vehicleBrand, $vehicleModel, $vehicleYear, $vehiclePlates, $vehicleColor, 1);                        
+                        }
+                    }
                     return $uniqueID;
                 } else {
                     return false;
@@ -26,6 +38,17 @@
             echo $th;
         }            
     }
+
+        public function createVehiculoVisita(int $idVisita, string $marca, string $modelo, string $anio, string $placas, string $color, int $estatusRegistro){
+            try {
+                $query = sprintf("INSERT INTO `visitas_vehiculos` (`id_visita`, `marca`, `modelo`, `anio`, `placas`, `color`, `fecha_registro`, `fecha_actualizacion`, `estatus_registro`) 
+                VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)", 
+                $idVisita, $marca, $modelo, $anio, $placas, $color, date("Y-m-d H:i:s"), date("Y-m-d H:i:s"), $estatusRegistro);                
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
 
         public function getAllvisitByOwner(string $email) {
             try {                
