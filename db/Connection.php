@@ -26,6 +26,10 @@
                 $this->sqlConn = null;
             }
         } 
+
+        function getConnection() {
+            return $this->sqlConn;
+        }
         
         function closeConnection(){
             $this->sqlConn->close();
