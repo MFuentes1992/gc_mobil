@@ -161,11 +161,14 @@
                 v.nombre_visita as nombre,
                 v.fecha_ingreso as desde,
                 v.fecha_salida as hasta,
-                ti.tipo_ingreso as tipo,
+                ti.id as tipo_ingreso,
+                ti.tipo_ingreso as tipoIngresoText,
                 v.multiple_entrada as multiple_entrada,
                 v.notificaciones as notificaciones,
+                u.name as nameAutor,
                 u.email as emailAutor,
-                tv.tipo_visita,
+                tv.id as tipo_visita,
+                tv.tipo_visita as tipoVisitaText,
                 v.uniqueID,
                 i.seccion as seccion,
                 i.numero as num_int,
@@ -188,6 +191,24 @@
             JOIN recintos as r
             ON r.id = i.id_recinto
             WHERE v.uniqueID = '%s' AND v.estatus_registro = 1", $qr);                        
+                return $this->execQuery($query);                   
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
+        public function getVehiclesByVisit(string $qr) {
+            try {                
+                $query = sprintf("SELECT 
+                vv.marca as marca,
+                vv.modelo as modelo,
+                vv.anio as anio,
+                vv.placas as placas,
+                vv.color as color
+            FROM visitas_vehiculos as vv
+            JOIN visitas as v
+            ON vv.id_visita = v.id
+            WHERE v.uniqueID = '%s'", $qr);                        
                 return $this->execQuery($query);                   
             } catch (\Throwable $th) {
                 echo $th;

@@ -1,4 +1,4 @@
-<?php     
+<?php 
     require_once $_SERVER['DOCUMENT_ROOT']."/model/VisitaModel.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/sessionManager/SessionManager.php";
     session_start();
@@ -7,7 +7,7 @@
         $session = new SessionManager();
         $connValues = $session->getSession("userConn");
         $model = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
-        $res = $model->readQR($query["qr"]);
+        $res = $model->getVehiclesByVisit($query["qr"]);
         if($res && $res->num_rows > 0) {
             header("HTTP/1.1 200 OK");
             echo json_encode($res->fetch_array()); 
