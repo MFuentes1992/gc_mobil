@@ -9,8 +9,18 @@
         $model = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
         $res = $model->getVehiclesByVisit($query["qr"]);
         if($res && $res->num_rows > 0) {
+            $resArr = array();
+            while($row = $res->fetch_array()) {
+                array_push($resArr, array(
+                    "marca" => $row["marca"],
+                    "modelo" => $row["modelo"],
+                    "anio" => $row["anio"],
+                    "placas" => $row["placas"],
+                    "color" => $row["color"],
+                ));
+            }
             header("HTTP/1.1 200 OK");
-            echo json_encode($res->fetch_array()); 
+            echo json_encode($resArr);
         } else {
             header("HTTP/1.1 400 ERROR");
             $msg = array("estatus"=> "400", "message"=>"Something went wrong");
