@@ -9,8 +9,15 @@
         $connValues = $session->getSession("userConn");
         $model = new Vigilante($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
         $res = $model->getActivationCode($payload["code"]);
+
         if($res) {
             $row = $res->fetch_assoc();
+            if($row == null) {
+                header("HTTP/1.1 400 ERROR");
+                $msg = array("code" => "400", "message" => "Codigo no encontrado");
+                echo json_encode($msg);
+                return;
+            }
             if($row["estatus_uso"] == 0 || $row["estatus_uso"] == "0") {
                 $operation = $model->updateActivationCode($payload["code"]);
                 if(!$operation) {
