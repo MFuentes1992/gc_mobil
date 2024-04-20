@@ -158,6 +158,7 @@
         public function readQR(string $qr) {
             try {                
                 $query = sprintf("SELECT 
+                v.id as visita_id,
                 v.nombre_visita as nombre,
                 v.fecha_ingreso as desde,
                 v.fecha_salida as hasta,
