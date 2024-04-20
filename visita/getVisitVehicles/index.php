@@ -12,6 +12,7 @@
             $resArr = array();
             while($row = $res->fetch_array()) {
                 array_push($resArr, array(
+                    "vehicle_id"=> $row["vehicle_id"],
                     "marca" => $row["marca"],
                     "modelo" => $row["modelo"],
                     "anio" => $row["anio"],
