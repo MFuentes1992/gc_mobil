@@ -39,11 +39,46 @@
         }            
     }
 
+        public function updateVisita(int $idVisita, int $idTipoVisita, int $idTipoIngreso, string $fechaIngreso, string $fechaSalida, int $multipleEntrada, int $notificaciones, string $nombreVisita, int $estatusRegistro, string $vehicles) {
+            try {
+                $query = sprintf("UPDATE `visitas` SET `id_tipo_visita` = %d, `id_tipo_ingreso` = %d, `fecha_ingreso` = '%s', `fecha_salida` = '%s', `multiple_entrada` = %d, `notificaciones` = %d, `nombre_visita` = '%s', `fecha_actualizacion` = '%s', `estatus_registro` = %d WHERE `id` = %d", $idTipoVisita, $idTipoIngreso, $fechaIngreso, $fechaSalida, $multipleEntrada, $notificaciones, $nombreVisita, date("Y-m-d H:i:s"), $estatusRegistro, $idVisita);
+                $res = $this->execQuery($query);                
+                if($res) {                    
+                    $data = json_decode($vehicles, true);                                        
+                    foreach($data as $vehicle) {
+                        $vehicleId = $vehicle["vehicle_id"];
+                        $vehicleBrand = $vehicle["brand"];
+                        $vehicleModel = $vehicle["model"];
+                        $vehicleYear = $vehicle["year"];
+                        $vehiclePlates = $vehicle["plates"];
+                        $vehicleColor = $vehicle["color"];
+                        if($vehicleModel != "" && $vehiclePlates != "" 
+                        && $vehicleColor != "" && $vehicleYear != "" 
+                        && $vehicleBrand != "") {                                                                     
+                            $this->updateVehicle($vehicleId, $vehicleBrand, $vehicleModel, $vehicleYear, $vehiclePlates, $vehicleColor, 1);                        
+                        }
+                    }  
+                }
+                return $res;
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
         public function createVehiculoVisita(int $idVisita, string $marca, string $modelo, string $anio, string $placas, string $color, int $estatusRegistro){
             try {
                 $query = sprintf("INSERT INTO `visitas_vehiculos` (`id_visita`, `marca`, `modelo`, `anio`, `placas`, `color`, `fecha_registro`, `fecha_actualizacion`, `estatus_registro`) 
                 VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)", 
                 $idVisita, $marca, $modelo, $anio, $placas, $color, date("Y-m-d H:i:s"), date("Y-m-d H:i:s"), $estatusRegistro);                
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
+        public function updateVehicle(int $idVehicle, string $marca, string $modelo, string $anio, string $placas, string $color, int $estatusRegistro) {
+            try {
+                $query = sprintf("UPDATE `visitas_vehiculos` SET `marca` = '%s', `modelo` = '%s', `anio` = '%s', `placas` = '%s', `color` = '%s', `fecha_actualizacion` = '%s', `estatus_registro` = %d WHERE `id` = %d", $marca, $modelo, $anio, $placas, $color, date("Y-m-d H:i:s"), $estatusRegistro, $idVehicle);
                 return $this->execQuery($query);
             } catch (\Throwable $th) {
                 echo $th;
