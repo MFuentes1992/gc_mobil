@@ -201,6 +201,7 @@
         public function getVehiclesByVisit(string $qr) {
             try {                
                 $query = sprintf("SELECT 
+                vv.id as vehicle_id,
                 vv.marca as marca,
                 vv.modelo as modelo,
                 vv.anio as anio,
