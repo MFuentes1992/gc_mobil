@@ -65,6 +65,27 @@
             }
         }
 
+        public function createMultipleVehicles(int $idVisita, string $vehicles) {
+            try {
+                $data = json_decode($vehicles, true);                                        
+                foreach($data as $vehicle) {
+                    $vehicleBrand = $vehicle["brand"];
+                    $vehicleModel = $vehicle["model"];
+                    $vehicleYear = $vehicle["year"];
+                    $vehiclePlates = $vehicle["plates"];
+                    $vehicleColor = $vehicle["color"];
+                    if($vehicleModel != "" && $vehiclePlates != "" 
+                    && $vehicleColor != "" && $vehicleYear != "" 
+                    && $vehicleBrand != "") {                                                                     
+                        $this->createVehiculoVisita($idVisita, $vehicleBrand, $vehicleModel, $vehicleYear, $vehiclePlates, $vehicleColor, 1);                        
+                    }
+                }
+                return true;
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
         public function createVehiculoVisita(int $idVisita, string $marca, string $modelo, string $anio, string $placas, string $color, int $estatusRegistro){
             try {
                 $query = sprintf("INSERT INTO `visitas_vehiculos` (`id_visita`, `marca`, `modelo`, `anio`, `placas`, `color`, `fecha_registro`, `fecha_actualizacion`, `estatus_registro`) 
