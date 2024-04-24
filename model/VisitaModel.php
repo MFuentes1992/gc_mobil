@@ -106,6 +106,15 @@
             }
         }
 
+        public function deleteVehicle(int $idVehicle) {
+            try {
+                $query = sprintf("DELETE FROM `visitas_vehiculos` WHERE `id` = %d", $idVehicle);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
         public function getAllvisitByOwner(string $email) {
             try {                
                 $query = sprintf("SELECT 
