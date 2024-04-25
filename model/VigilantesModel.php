@@ -6,7 +6,7 @@
         }
         public function getActivationCode(string $code) {
             try {
-                $query = sprintf("SELECT * FROM `codigos_vigilancia` WHERE `codigo_activacion` = '%s'", $code);
+                $query = sprintf("SELECT * FROM `codigos_vigilancia` WHERE `codigo_activacion` = '%s' AND `estatus_registro` = 1", $code);
                 $res = $this->execQuery($query);
                 return $res;
             } catch (\Throwable $th) {
@@ -16,7 +16,7 @@
 
         public function updateActivationCode(string $code){
             try {
-                $query = sprintf("UPDATE `codigos_vigilancia` SET `estatus_uso` = 1 WHERE `codigo_activacion` = '%s'", $code);
+                $query = sprintf("UPDATE `codigos_vigilancia` SET `estatus_uso` = 1 WHERE `codigo_activacion` = '%s' AND `estatus_registro` = 1", $code);
                 return $this->execQuery($query);
             } catch (\Throwable $th) {
                 echo $th;
