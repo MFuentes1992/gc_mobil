@@ -31,7 +31,7 @@
                 echo json_encode($resArr);
             } else {
                 header("HTTP/1.1 400 ERROR");
-                $msg = array("code" => "400", "message" => "Codigo en uso");
+                $msg = array("code" => "203", "message" => "Codigo en uso");
                 echo json_encode($msg);
                 return;
             }
