@@ -256,7 +256,7 @@
             ON i.id = v.id_instalacion
             JOIN recintos as r
             ON r.id = i.id_recinto
-            WHERE v.uniqueID = '%s' AND v.estatus_registro = 1", $qr);                        
+            WHERE v.uniqueID = '%s'", $qr);                        
                 return $this->execQuery($query);                   
             } catch (\Throwable $th) {
                 echo $th;
