@@ -219,6 +219,45 @@
             }  
         }
 
+        public function getAllHistoric(int $idInstalacion, string $email) {
+          try {                
+            $query = sprintf("SELECT 
+              v.nombre_visita as nombre,
+              v.fecha_ingreso as desde,
+              v.fecha_salida as hasta,
+              ti.tipo_ingreso as tipo,
+              v.multiple_entrada as multiple_entrada,
+              v.notificaciones as notificaciones,
+              u.email as emailAutor,
+              tv.tipo_visita,
+              v.uniqueID,
+              i.seccion as seccion,
+              i.numero as num_int,
+              r.nombre as residencial,
+              r.calle as calle,
+              r.numero_ext as num_ext,
+              r.colonia as colonia,
+              r.ciudad as ciudad,
+              r.estado as estado,
+              r.codigo_postal as cp,
+              v.estatus_registro as estado
+            FROM visitas as v RIGHT JOIN users as u
+            ON v.id_usuario =  u.id
+            JOIN lst_tipo_ingreso_visita as ti 
+            ON v.id_tipo_ingreso = ti.id    
+            JOIN lst_tipo_visita as tv  
+            ON v.id_tipo_visita = tv.id
+            JOIN instalaciones as i
+            ON i.id = v.id_instalacion
+            JOIN recintos as r
+          ON r.id = i.id_recinto
+          WHERE v.id_instalacion = %d and u.email = '%s' and v.estatus_registro = 0", $idInstalacion, $email);        
+          return $this->execQuery($query); 
+          }  catch (\Throwable $th) {
+            echo $th;
+          }
+        }
+
 
         public function readQR(string $qr) {
             try {                
@@ -256,7 +295,7 @@
             ON i.id = v.id_instalacion
             JOIN recintos as r
             ON r.id = i.id_recinto
-            WHERE v.uniqueID = '%s' AND v.estatus_registro = 1", $qr);                        
+            WHERE v.uniqueID = '%s'", $qr);                        
                 return $this->execQuery($query);                   
             } catch (\Throwable $th) {
                 echo $th;
