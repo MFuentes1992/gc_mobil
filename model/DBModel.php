@@ -12,5 +12,13 @@
                 echo $th;
             }            
         }
+        public function getAllClients() {
+            try {                
+                $query = sprintf("SELECT * FROM empresas_administradoras WHERE codigo NOT IN ('H38AEQ3HVM') AND estatus = 1");
+                return $this->execQuery($query);                   
+            } catch (\Throwable $th) {
+                echo $th;
+            }   
+        }
     }
 ?>
