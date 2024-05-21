@@ -6,4 +6,5 @@
     $dbUser = "u579469339_GC_admins";
     $dbPass = "8!San^MEj";
     $dbSession = "userConn";
+    $dbPrefix = "u579469339";
 ?>

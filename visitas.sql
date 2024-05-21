@@ -212,3 +212,25 @@ SELECT
 FROM instalaciones as i LEFT JOIN recintos as r
 ON r.id = i.id_recinto
 WHERE i.id in (3,13) AND i.estatus_registro = 1
+
+
+# ---- SP to expire visitas
+
+DELIMITER //
+CREATE PROCEDURE expire_visita()
+BEGIN
+	UPDATE visitas 
+    SET estatus_registro = 0
+    WHERE fecha_salida < NOW();
+END //
+DELIMITER ;
+
+
+
+SET GLOBAL event_scheduler = ON;
+
+CREATE EVENT visitas_scheduler
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 MINUTE
+ON COMPLETION PRESERVE
+DO 
+CALL expire_visita();
