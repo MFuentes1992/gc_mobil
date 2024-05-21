@@ -6,18 +6,16 @@
   $dbRes = $dbService->getAllAdminRecords();
   $resArr = array();
   while($row = $dbRes->fetch_array()){
-    $dbUserName = $dbPrefix."_".$row["datos"];
+    $dbUserName = $dbPrefix."_".$row["usuario"];
     $dbAcceso = $row["acceso"];
-    $dbTempService = new DBService($dbUrl, $dbUserName, $dbAcceso, $dbUserName);
+    $dbTempName = $dbPrefix."_".$row["datos"];
+    $dbTempService = new DBService($dbUrl, $dbUserName, $dbAcceso, $dbTempName);
     $executor = $dbTempService->getDBObject();
     $query = sprintf("CALL expire_visita()");
     $res = $executor->execQuery($query);
-    if(!$res) {
-      header("HTTP/1.1 500 ERROR");
-      echo json_encode(array("mensaje" => "La llamada al SP fallo para".$row["datos"], "codigo"=>"400"));
-    } 
     array_push($resArr, array(
       "datos" => $row["datos"],
+      "usuario" => $row["usuario"],
       "acceso" => $row["acceso"],
       "codigo" => $row["codigo"],
       "SP_executed" => $res,
