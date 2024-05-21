@@ -12,6 +12,9 @@
         function connectToAdmin() {            
             return $this->dbModel->getClientDB($this->clientCode);
         }
+        function getAllAdminRecords() {
+            return $this->dbModel->getAllClients();
+        }
         function getDBObject() {
             return $this->dbModel;
         }
