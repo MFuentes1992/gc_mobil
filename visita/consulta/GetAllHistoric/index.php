@@ -23,7 +23,7 @@
           $resVehicles = $model->getVehiclesByVisit($row['uniqueID']);
     
             $vehicles = array();
-    if($res && $res->num_rows > 0) {
+            if($res && $res->num_rows > 0) {
             while($rowV = $resVehicles->fetch_array()) {
                 array_push($vehicles, array(
                     "placas" => $rowV["placas"],

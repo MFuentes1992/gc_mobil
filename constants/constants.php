@@ -7,4 +7,5 @@
     $dbPass = "8!San^MEj";
     $dbSession = "userConn";
     $dbPrefix = "u579469339";
+    $fcmProjectId = "gcmobile-5d55a";
 ?>
