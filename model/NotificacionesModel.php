@@ -12,5 +12,24 @@
                 echo $th;
             }
         }  
+
+        function getDeviceByDeviceId(string $deviceId) {
+            try {
+                $query = sprintf("SELECT * FROM recintos_devices WHERE device_id = '%s'", $deviceId);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
+        function registerDevice(int $recintoId, string $deviceId) {
+            try {
+                $query = sprintf("INSERT INTO recintos_devices (id_recinto, device_id) VALUES (%d, '%s')", $recintoId, $deviceId);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
     }
 ?>

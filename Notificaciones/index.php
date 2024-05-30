@@ -27,7 +27,7 @@ if (
   $devicesArr = array();
   while ($row = $res->fetch_array()) {
     array_push($devicesArr, array(
-      $row["deviceId"]
+      $row["device_id"]
     ));
   }
   if (count($devicesArr) == 0) {
