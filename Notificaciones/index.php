@@ -57,9 +57,13 @@ if (
     $fields = array(
       "message" => array(
         "token" => $device[0],
-        "notification" => $notification
+        "notification" => $notification,
+        "android" => array(
+          "priority" => "high"
+        )
       )
     );
+    
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
