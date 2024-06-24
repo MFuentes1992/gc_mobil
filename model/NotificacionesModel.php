@@ -40,5 +40,14 @@
             }
         }
 
+        function getAvisosAttachments(int $avisoId) {
+            try {
+                $query = sprintf("SELECT * FROM avisos_archivos WHERE id_aviso = %d", $avisoId);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
     }
 ?>
