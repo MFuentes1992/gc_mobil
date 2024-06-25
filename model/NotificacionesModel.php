@@ -33,7 +33,7 @@
 
         function getAvisosByRecinto(int $recintoId) {
             try {
-                $query = sprintf("SELECT * FROM avisos WHERE id_recinto = %d", $recintoId);
+                $query = sprintf("SELECT * FROM avisos WHERE id_recinto = %d order by fecha_envio DESC", $recintoId);
                 return $this->execQuery($query);
             } catch (\Throwable $th) {
                 echo $th;
