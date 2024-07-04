@@ -49,5 +49,14 @@
             }
         }
 
+        function getEstadosCuenta(int $residenteId, int $instalacionId) {
+            try {
+                $query = sprintf("SELECT * FROM estados_cuenta WHERE id_residente = %d AND id_instalacion = %d", $residenteId, $instalacionId);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
     }
 ?>
