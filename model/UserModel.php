@@ -6,11 +6,20 @@
         }
         public function getUserByEmail(string $email) {
             try {                
-                $query = sprintf("SELECT u.id, u.name, u.email, u.id_instalacion, u.password FROM users as u WHERE u.email = '%s' AND status = 1", $email);                
+                $query = sprintf("SELECT u.id, u.name, u.id_profile, u.email, u.id_instalacion, u.password FROM users as u WHERE u.email = '%s' AND status = 1", $email);                
                 return $this->execQuery($query);                   
             } catch (\Throwable $th) {
                 echo $th;
             }            
+        }
+
+        public function getProfiles(string $email) {
+            try {
+                $query = sprintf("SELECT u.id_profile FROM users as u WHERE u.email = '%s' AND status = 1", $email);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
         }
     }
 ?>
