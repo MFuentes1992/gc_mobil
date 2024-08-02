@@ -9,7 +9,6 @@
         $connValues = $session->getSession("userConn");
         $model = new Vigilante($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
         $res = $model->getActivationCode($payload["code"]);
-
         if($res) {
             $row = $res->fetch_assoc();
             if($row == null) {
@@ -27,7 +26,9 @@
                     return;
                 }
                 header("HTTP/1.1 200 OK");
-                $resArr = array("code" => "200", "message" => "Codigo Actualizado", "token_instalacion" => uniqid('', true));            
+                $resArr = array("code" => "200", 
+                    "message" => "Codigo Actualizado", "token_instalacion" => uniqid('', true), 
+                    "id_caseta" => $row["id_caseta"], "caseta" => $row["caseta"], "numero_celular" => $row["numero_celular"]);            
                 echo json_encode($resArr);
             } else {
                 header("HTTP/1.1 400 ERROR");
