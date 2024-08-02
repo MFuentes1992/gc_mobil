@@ -320,5 +320,14 @@
                 echo $th;
             }
         }
+
+        public function addBitacora(int $id_visita, int $id_caseta) {
+            try {
+                $query = sprintf("INSERT INTO `bitacora_visita` (`id_visita`, `id_caseta`, `fecha_lectura`) VALUES (%d, %d, '%s')", $id_visita, $id_caseta, date("Y-m-d H:i:s"));
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
     }
 ?>
