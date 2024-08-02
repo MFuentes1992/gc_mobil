@@ -6,7 +6,6 @@
         }
         public function getActivationCode(string $code) {
             try {
-                // $query = sprintf("SELECT * FROM `codigos_vigilancia` WHERE `codigo_activacion` = '%s' AND `estatus_registro` = 1", $code);
                 $query = sprintf("SELECT 
                     cv.id,
                     cv.id_caseta,
