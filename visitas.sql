@@ -234,3 +234,17 @@ ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 MINUTE
 ON COMPLETION PRESERVE
 DO 
 CALL expire_visita();
+
+
+# ---- GET Casetas & Codes
+SELECT 
+    cv.id,
+    cv.id_caseta,
+    cv.codigo_activacion,
+    cv.estatus_registro,
+    cv.estatus_uso,
+    c.caseta,
+    c.numero_celular,
+FROM codigo_activacion as cv LEFT JOIN info_caseta_vigilancia as c
+ON cv.id_caseta = c.id
+WHERE codigo_activacion = '%s' AND cv.estatus_registro = 1
