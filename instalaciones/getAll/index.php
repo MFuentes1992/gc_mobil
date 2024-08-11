@@ -7,7 +7,7 @@ $query = $_GET;
 $session = new SessionManager();
 $connValues = $session->getSession("userConn");
 $model = new InstalacionesModel($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
-$res = $model->getAllInstalaciones(explode(',',$query["ids"]));
+$res = $model->getAllInstalaciones($query["ids"]);
 if($res) {    
     $arr = array();
     while($row = $res->fetch_array()) {

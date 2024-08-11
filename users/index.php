@@ -12,7 +12,8 @@
         $profilesArr = array();
         while ($row = $res->fetch_array()) {
             array_push($profilesArr, array(
-                "id_profile" => $row["id_profile"],             
+                "id_profile" => $row["id_profile"],  
+                "foto" => $row["foto"]           
             ));
         }
         $response = array(
