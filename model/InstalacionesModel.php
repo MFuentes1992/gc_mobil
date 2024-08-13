@@ -28,5 +28,14 @@ class InstalacionesModel extends Connection {
             echo $th;
         }            
     }
+
+    public function getInstalacionesReferenciaPago(int $instalacionId) {
+        try {
+            $query = sprintf("SELECT i.referencia_concepto, i.referencia_centavos, i.referencia_bancaria FROM instalaciones as i WHERE id = %d", $instalacionId);
+            return $this->execQuery($query); 
+        } catch (\Throwable $th) {
+            echo $th;
+        }
+    }
 }
 ?>
