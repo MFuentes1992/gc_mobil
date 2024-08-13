@@ -68,5 +68,14 @@
             }
         }
 
+        function getLastEdoCta(int $residenteId, int $instalacionId) {
+            try {
+                $query = sprintf("SELECT * FROM estados_cuenta WHERE id_residente = %d AND id_instalacion = %d order by fecha_registro DESC limit 1", $residenteId, $instalacionId);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
     }
 ?>
