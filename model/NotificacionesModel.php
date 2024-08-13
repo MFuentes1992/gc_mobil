@@ -42,8 +42,7 @@
 
         function getAvisosByDate(int $recintoId, string $date) {
             try {
-                $query = sprintf("SELECT * FROM avisos WHERE id_recinto = %d AND fecha_envio >= '%s'", $recintoId, $date);
-                echo $query;
+                $query = sprintf("SELECT * FROM avisos WHERE id_recinto = %d AND fecha_envio >= '%s'", $recintoId, $date);                
                 return $this->execQuery($query);
             } catch (\Throwable $th) {
                 echo $th;
