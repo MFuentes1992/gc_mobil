@@ -40,6 +40,16 @@
             }
         }
 
+        function getAvisosByDate(int $recintoId, string $date) {
+            try {
+                $query = sprintf("SELECT * FROM avisos WHERE id_recinto = %d AND fecha_envio >= '%s'", $recintoId, $date);
+                echo $query;
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
         function getAvisosAttachments(int $avisoId) {
             try {
                 $query = sprintf("SELECT * FROM avisos_archivos WHERE id_aviso = %d", $avisoId);
@@ -52,6 +62,15 @@
         function getEstadosCuenta(int $residenteId, int $instalacionId) {
             try {
                 $query = sprintf("SELECT * FROM estados_cuenta WHERE id_residente = %d AND id_instalacion = %d", $residenteId, $instalacionId);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
+        function getLastEdoCta(int $residenteId, int $instalacionId) {
+            try {
+                $query = sprintf("SELECT * FROM estados_cuenta WHERE id_residente = %d AND id_instalacion = %d order by fecha_registro DESC limit 1", $residenteId, $instalacionId);
                 return $this->execQuery($query);
             } catch (\Throwable $th) {
                 echo $th;

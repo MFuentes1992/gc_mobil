@@ -71,5 +71,21 @@
                 echo $th;
             }
         }
+
+        function getRecintoBankData(int $recintoId) {
+            try {
+                $query = sprintf("SELECT
+                    cb.numero_cuenta,
+                    cb.clabe,
+                    lb.nombre as banco
+                FROM cuentas_bancarias as cb 
+                JOIN lst_bancos as lb ON
+                cb.id_banco = lb.id
+                WHERE id_recinto = %d", $recintoId);
+                return $this->execQuery($query); 
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
     }
 ?>

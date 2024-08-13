@@ -15,7 +15,13 @@
 
         public function getProfiles(string $email) {
             try {
-                $query = sprintf("SELECT u.id_profile FROM users as u WHERE u.email = '%s' AND status = 1", $email);
+                $query = sprintf("SELECT 
+                    u.id_profile, 
+                    ui.foto 
+                FROM users as u 
+                JOIN users_informacion as ui
+                ON u.id = ui.id_user
+                WHERE u.email = '%s' AND u.status = 1", $email);
                 return $this->execQuery($query);
             } catch (\Throwable $th) {
                 echo $th;

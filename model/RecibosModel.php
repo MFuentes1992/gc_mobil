@@ -14,6 +14,15 @@
                 echo $th;
             }
         }
+
+        function getRecibosByInstalacionResidenteLast(int $residenteId, int $instalacionId, int $recintoId) {
+            try {
+                $query = sprintf("SELECT * FROM recibos WHERE id_residente = %d AND id_instalacion = %d AND id_recinto = %d order by fecha_elaboracion DESC limit 1", $residenteId, $instalacionId, $recintoId);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
     }
 
 ?>
