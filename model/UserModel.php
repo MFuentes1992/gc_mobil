@@ -27,5 +27,40 @@
                 echo $th;
             }
         }
+
+        public function changePassword(string $email, string $newPassword) {
+            try {
+                $query = sprintf("UPDATE users SET password = '%s', updated_at = NOW() WHERE email = '%s'", $newPassword, $email);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
+        public function getInstalacionDebt(int $instalacion) {
+            try {
+                $query = sprintf("SELECT 
+                    cr.id, 
+                    cr.id_instalacion, 
+                    cr.id_residente, 
+                    cr.monto_pendiente, 
+                    IF(crt.descripcion IS NULL, ca.descripcion, crt.descripcion) AS descripcion, 
+                    IF(crt.id_tipo_recargo = 2 AND CURDATE() >= crt.fecha_aplicacion_recargo, 
+                    IF(crt.id_tipo_monto_recargo = 2, 
+                    crt.recargo_monto, (crt.recargo_monto/100)*crt.monto), 0.00) AS recargo, 
+                    IF(crt.id_tipo_descuento = 2 AND CURDATE() <= crt.fecha_aplicacion_descuento, 	                 
+                    IF(crt.id_tipo_monto_descuento = 2, 
+                    crt.monto_descuento, (crt.monto_descuento/100)*crt.monto), 0.00) AS descuento 
+                FROM cuotas_residente cr 
+                LEFT JOIN cuotas_recurrentes crt 
+                ON cr.id_cuota_recurrente = crt.id 
+                LEFT JOIN cuotas_adicionales ca 
+                ON cr.id_cuota_adicional = ca.id 
+                WHERE pagado = 0 AND id_instalacion = %d", $instalacion);
+                return $this->execQuery($query);
+            }catch(\Throwable $th) {
+                echo $th;
+            }
+        }
     }
 ?>
