@@ -62,5 +62,16 @@
                 echo $th;
             }
         }
+
+        public function getInstalacionEquity(int $instalacion) {
+            try {
+                $query = sprintf("SELECT (IFNULL(SUM(ia.monto_disponible), 0)+(IFNULL((select sum(sf.monto_disponible) 
+                    FROM saldos_a_favor sf WHERE sf.id_instalacion = %d), 0))) AS monto_disponible 
+                    FROM ingresos_asignados ia WHERE ia.id_instalacion = %d", $instalacion, $instalacion);
+                return $this->execQuery($query);
+            }catch(\Throwable $th) {
+                echo $th;
+            }
+        }
     }
 ?>
