@@ -16,7 +16,7 @@
             }        
             $response = array(
                 "status" => "OK",
-                "message" => "Deuda obtenida correctamente",
+                "message" => "Saldo obtenido correctamente",
                 "equity" => $saldo_total
             );
             echo json_encode($response);
@@ -24,7 +24,7 @@
             header("HTTP/1.1 400 ERROR");
             $response = array(
                 "status" => "ERROR",
-                "message" => "Error al obtener la deuda"
+                "message" => "Error al obtener los saldos"
             );
             echo json_encode($response);
         }
