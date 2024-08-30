@@ -16,6 +16,10 @@
         function getUserByEmail(string $email) {
            return $this->userModel->getUserByEmail($email);
         }
+        function changePassword(string $email, string $password) {
+            $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+            return $this->userModel->changePassword($email, $hashedPassword);
+        }
     }
     
 
