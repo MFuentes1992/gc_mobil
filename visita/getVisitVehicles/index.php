@@ -8,7 +8,7 @@
         $connValues = $session->getSession("userConn");
         $model = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
         $res = $model->getVehiclesByVisit($query["qr"]);
-        if($res && $res->num_rows > 0) {
+        if($res) {
             $resArr = array();
             while($row = $res->fetch_array()) {
                 array_push($resArr, array(

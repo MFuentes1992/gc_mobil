@@ -321,6 +321,32 @@
             }
         }
 
+        public function getVisitaById(string $uniqueId) {
+            try {
+                $query = sprintf("SELECT 
+                v.id as visita_id,
+                v.nombre_visita as nombre,
+                v.fecha_ingreso as desde,
+                v.fecha_salida as hasta,
+                v.multiple_entrada as multiple_entrada,
+                v.notificaciones as notificaciones,
+                v.uniqueID,
+                v.estatus_registro,
+                ti.id as tipo_ingreso,
+                ti.tipo_ingreso as tipoIngresoText,
+                tv.tipo_visita as tipoVisitaText   
+                FROM visitas as v
+                JOIN lst_tipo_ingreso_visita as ti 
+                ON v.id_tipo_ingreso = ti.id    
+                JOIN lst_tipo_visita as tv  
+                ON v.id_tipo_visita = tv.id
+	            WHERE v.uniqueID = '%s'", $uniqueId);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
         public function addBitacora(int $id_visita, int $id_caseta) {
             try {
                 $query = sprintf("INSERT INTO `bitacora_visita` (`id_visita`, `id_caseta`, `fecha_lectura`) VALUES (%d, %d, '%s')", $id_visita, $id_caseta, date("Y-m-d H:i:s"));
