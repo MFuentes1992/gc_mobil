@@ -156,7 +156,7 @@
                 i.seccion as seccion,
                 i.numero as num_int,
                 r.nombre as residencial,
-                r.calle as calle,
+                rstringTemplateAddQuerystringTemplateAddQuerystringTemplateAddQuerstringTemplateAddQueryy.calle as calle,
                 r.numero_ext as num_ext,
                 r.colonia as colonia,
                 r.ciudad as ciudad,
@@ -333,8 +333,8 @@
                 v.uniqueID,
                 v.estatus_registro,
                 ti.id as tipo_ingreso,
-                ti.tipo_ingreso as tipoIngresoText,
-                tv.tipo_visita as tipoVisitaText   
+                v.id_tipo_ingreso,
+                v.id_tipo_visita   
                 FROM visitas as v
                 JOIN lst_tipo_ingreso_visita as ti 
                 ON v.id_tipo_ingreso = ti.id    
