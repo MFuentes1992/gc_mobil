@@ -47,15 +47,28 @@
                     $data = json_decode($vehicles, true);                                        
                     foreach($data as $vehicle) {
                         $vehicleId = $vehicle["vehicle_id"];
-                        $vehicleBrand = $vehicle["brand"];
-                        $vehicleModel = $vehicle["model"];
-                        $vehicleYear = $vehicle["year"];
-                        $vehiclePlates = $vehicle["plates"];
-                        $vehicleColor = $vehicle["color"];
-                        if($vehicleModel != "" && $vehiclePlates != "" 
-                        && $vehicleColor != "" && $vehicleYear != "" 
-                        && $vehicleBrand != "") {                                                                     
-                            $this->updateVehicle($vehicleId, $vehicleBrand, $vehicleModel, $vehicleYear, $vehiclePlates, $vehicleColor, 1);                        
+                        if(isset($vehicleId)) {
+                            $vehicleBrand = $vehicle["brand"];
+                            $vehicleModel = $vehicle["model"];
+                            $vehicleYear = $vehicle["year"];
+                            $vehiclePlates = $vehicle["plates"];
+                            $vehicleColor = $vehicle["color"];
+                            if($vehicleModel != "" && $vehiclePlates != "" 
+                            && $vehicleColor != "" && $vehicleYear != "" 
+                            && $vehicleBrand != "") {                                                                     
+                                $this->updateVehicle($vehicleId, $vehicleBrand, $vehicleModel, $vehicleYear, $vehiclePlates, $vehicleColor, 1);                        
+                            }
+                        } else {
+                            $vehicleBrand = $vehicle["brand"];
+                            $vehicleModel = $vehicle["model"];
+                            $vehicleYear = $vehicle["year"];
+                            $vehiclePlates = $vehicle["plates"];
+                            $vehicleColor = $vehicle["color"];
+                            if($vehicleModel != "" && $vehiclePlates != "" 
+                            && $vehicleColor != "" && $vehicleYear != "" 
+                            && $vehicleBrand != "") {                                                                     
+                                $this->createVehiculoVisita($idVisita, $vehicleBrand, $vehicleModel, $vehicleYear, $vehiclePlates, $vehicleColor, 1);                        
+                            }
                         }
                     }  
                 }

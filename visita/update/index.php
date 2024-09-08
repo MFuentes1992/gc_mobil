@@ -12,7 +12,7 @@
     $payload["fechaIngreso"], $payload["fechaSalida"],
     intval($payload["multiEntrada"]), intval($payload["notificaciones"]), $payload["nombreVisita"],
     1,
-    isset($payload["vehicles"]) ? $payload["vehicles"] : "",);
+    isset($payload["vehicles"]) ? $payload["vehicles"] : "");
     if($res) {
         header("HTTP/1.1 200 OK");
         $msg = array("estatus"=> "200", "message"=>"La visita se actualizo correctamente");
