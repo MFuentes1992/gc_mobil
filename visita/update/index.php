@@ -7,7 +7,15 @@
     $session = new SessionManager();
     $connValues = $session->getSession("userConn");
     $model = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]); 
-    
+    $rawBitacora = $model->getBitacoraId(intval($payload["idVisita"]));
+    $bitacora = $rawBitacora->fetch_array();
+    if(isset($bitacora["fecha_lectura"])) {
+        header("HTTP/1.1 400 ERROR");
+        $msg = array("estatus"=> "400", "message"=>"El QR que intentas actualizar ya ha sido usado.");
+        echo json_encode($msg); 
+        return;
+    }
+
     $res = $model->updateVisita(intval($payload["idVisita"]), intval($payload["tipoVisita"]), intval($payload["tipoIngreso"]),
     $payload["fechaIngreso"], $payload["fechaSalida"],
     intval($payload["multiEntrada"]), intval($payload["notificaciones"]), $payload["nombreVisita"],
