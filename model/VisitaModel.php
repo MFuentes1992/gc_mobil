@@ -368,5 +368,44 @@
                 echo $th;
             }
         }
+
+        public function getBitacoraUniqueId(string $uniqueId) {
+            try {
+                $query = sprintf("SELECT 
+                bv.fecha_lectura,
+                v.nombre_visita as nombre
+                FROM bitacora_visita as bv 
+                JOIN visitas v 
+                ON v.id = bv.id_visita 
+                WHERE v.uniqueID = '%s'", $uniqueId);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
+        public function getBitacoraId(int $idVisita) {
+            try {
+                $query = sprintf("SELECT 
+                bv.fecha_lectura,
+                v.nombre_visita as nombre
+                FROM bitacora_visita as bv 
+                JOIN visitas v 
+                ON v.id = bv.id_visita 
+                WHERE v.id = %d", $idVisita);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
+        public function deleteVisita(string $uniqueId) {
+            try {
+                $query = sprintf("UPDATE `visitas` SET `estatus_registro` = 0 WHERE `uniqueID` = '%s'", $uniqueId);
+                return $this->execQuery($query);
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
     }
 ?>
