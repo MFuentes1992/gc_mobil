@@ -32,6 +32,28 @@
                 echo $th;
             }
         }
+
+        public function getCasetaInformation(string $activationCode) {
+            try {
+                $query = sprintf("SELECT 
+                c.numero_celular,
+                c.numero_telefono,
+                c.extension_telefono,
+                r.nombre,
+                r.logo,
+                CONCAT(r.calle, ' ', r.numero_ext, ', ', r.colonia, ', ', r.ciudad, ', ', r.codigo_postal, ', ', r.estado) as direccion
+                FROM info_caseta_vigilancia as c
+                LEFT JOIN recintos as r
+                ON c.id_recinto = r.id
+                LEFT JOIN codigos_vigilancia as cv
+                ON c.id = cv.id_caseta
+                WHERE cv.codigo_activacion = '%s' AND c.estatus_registro = 1 AND r.estatus_registro = 1", $activationCode);
+                $res = $this->execQuery($query);
+                return $res;
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
     }
 
 ?>
