@@ -1,32 +1,69 @@
-<?php     
-    require_once $_SERVER['DOCUMENT_ROOT']."/model/VisitaModel.php";
-    require_once $_SERVER['DOCUMENT_ROOT']."/sessionManager/SessionManager.php";
+<?php 
+    require_once $_SERVER['DOCUMENT_ROOT']."/service/VisitaService.php";    
+    // -- Controller
     session_start();
-    $query = $_GET;
-    if(isset($query["qr"])) {
-        $session = new SessionManager();
-        $connValues = $session->getSession("userConn");
-        $model = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
-        $res = $model->readQR($query["qr"]);
-        if($res && $res->num_rows > 0) {
-            $row = $res->fetch_array();
-            $addBitacoraRes = $model->addBitacora($row["visita_id"], $query["id_caseta"]);
-            if($addBitacoraRes) {
+    if(isset($_GET["qr"])) {
+        $qr = $_GET["qr"];
+        if($qr == "" || $qr == null) {
+            header("HTTP/1.1 400 ERROR");
+            $msg = array("estatus"=> "400", "message"=>"QR is required");
+            echo json_encode($msg);    
+            return;
+        }
+        $service = new VisitaService();
+        $res = $service->getVisitByQR($qr); 
+        header("HTTP/1.1 200 OK");
+        echo json_encode($res); 
+
+    } else if(isset($_POST["qr"])) {
+        $qr = $_POST["qr"];
+        $casetaId = $_POST["casetaId"];
+        $visitaId = $_POST["visitaId"];
+        $type = $_POST["type"];
+        if($qr == "" || $qr == null) {
+            header("HTTP/1.1 400 ERROR");
+            $msg = array("estatus"=> "400", "message"=>"QR is required");
+            echo json_encode($msg);    
+            return;
+        }
+        if($casetaId == "" || $casetaId == null) {
+            header("HTTP/1.1 400 ERROR");
+            $msg = array("estatus"=> "400", "message"=>"Caseta ID is required");
+            echo json_encode($msg);    
+            return;
+        }
+        if($visitaId == "" || $visitaId == null) {
+            header("HTTP/1.1 400 ERROR");
+            $msg = array("estatus"=> "400", "message"=>"Visita ID is required");
+            echo json_encode($msg);    
+            return;
+        }
+        if($type == "" || $type == null) {
+            header("HTTP/1.1 400 ERROR");
+            $msg = array("estatus"=> "400", "message"=>"Type is required");
+            echo json_encode($msg);    
+            return;
+        }
+        $service = new VisitaService();
+        if($type == "entry") {
+            $res = $service->registerQREntry($visitaId, $casetaId);
+            if($res) {
                 header("HTTP/1.1 200 OK");
-                echo json_encode($row); 
+                echo json_encode(array("estatus"=> "200", "message"=>"Entrada registrada."));
             } else {
                 header("HTTP/1.1 400 ERROR");
-                $msg = array("estatus"=> "400", "message"=>"Something went wrong");
-                echo json_encode($msg);    
-            } 
+                echo json_encode(array("estatus"=> "400", "message"=>"El usuario ya ha registrado su entrada, por favor registre su salida."));
+            }
         } else {
-            header("HTTP/1.1 400 ERROR");
-            $msg = array("estatus"=> "400", "message"=>"Something went wrong");
-            echo json_encode($msg);    
+            $res = $service->registerQRExit($visitaId, $casetaId);
+            if($res) {
+                header("HTTP/1.1 200 OK");
+                echo json_encode(array("estatus"=> "200", "message"=>"Salida registrada."));
+            } else {
+                header("HTTP/1.1 400 ERROR");
+                echo json_encode(array("estatus"=> "400", "message"=>"El usuario no ha registrado su entrada, por favor registre su entrada."));
+            }
         }
-    } else {
-        header("HTTP/1.1 400 ERROR");
-        $msg = array("estatus"=> "400", "message"=>"Something went wrong");
-        echo json_encode($msg);    
+
     }
 ?>
