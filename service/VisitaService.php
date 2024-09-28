@@ -16,8 +16,7 @@
 
         public function registerQREntry(int $visitaId, int $casetaId) {
             $existingEntry = $this->bitacoraRepository->selectFromWithVisitaId($visitaId);
-            echo $existingEntry->toString();
-            if(strcmp($existingEntry->getTipoRegistro(), "salida") == 0) {
+            if(strcmp($existingEntry->getTipoRegistro(), "salida") == 0 || $existingEntry->getVisitaId() == 0) {
                 $res = $this->bitacoraRepository->InsertInto($visitaId, $casetaId, "entrada");
                 return $res;
             } else {
@@ -28,8 +27,7 @@
 
         public function registerQRExit(int $visitaId, int $casetaId) {
             $existingEntry = $this->bitacoraRepository->selectFromWithVisitaId($visitaId);
-            echo $existingEntry->toString();
-            if(strcmp($existingEntry->getTipoRegistro(), "entrada") == 0) {
+            if(strcmp($existingEntry->getTipoRegistro(), "entrada") == 0 || $existingEntry->getVisitaId() == 0) {
                 $res = $this->bitacoraRepository->InsertInto($visitaId, $casetaId, "salida");
                 return $res;
             } else {
