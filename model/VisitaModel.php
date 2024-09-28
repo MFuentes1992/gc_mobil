@@ -297,7 +297,7 @@
                 r.ciudad as ciudad,
                 r.estado as estado,
                 r.codigo_postal as cp,
-            v.estatus_registro as estado 
+            v.estatus_registro as estatus_registro 
             FROM visitas as v RIGHT JOIN users as u
             ON v.id_usuario =  u.id
             JOIN lst_tipo_ingreso_visita as ti 
@@ -360,9 +360,11 @@
             }
         }
 
-        public function addBitacora(int $id_visita, int $id_caseta) {
+
+
+        public function addBitacoraEgress(int $id_visita, int $id_caseta) {
             try {
-                $query = sprintf("INSERT INTO `bitacora_visita` (`id_visita`, `id_caseta`, `fecha_lectura`) VALUES (%d, %d, '%s')", $id_visita, $id_caseta, date("Y-m-d H:i:s"));
+                $query = sprintf("INSERT INTO `bitacora_visita` (`id_visita`, `id_caseta`, `fecha_lectura`, `tipo_registro`) VALUES (%d, %d, '%s', '%s')", $id_visita, $id_caseta, date("Y-m-d H:i:s"), "salida");
                 return $this->execQuery($query);
             } catch (\Throwable $th) {
                 echo $th;
