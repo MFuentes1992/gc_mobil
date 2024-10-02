@@ -37,9 +37,22 @@
 
         public function getVisitByQR(string $qr) {
             $res = $this->visitaModel->readQR($qr);
+
             if($res && $res->num_rows > 0) {                
                 $resArr = array();
                 while($row = $res->fetch_array()) {
+                    $rawVehicles = $this->visitaModel->getVehiclesByVisit($row["uniqueID"]);
+                    $resVehicles = array();
+                    while($rowV = $rawVehicles->fetch_array()) {
+                        array_push($resVehicles, array(
+                            "vehicle_id" => $rowV["vehicle_id"],
+                            "marca" => $rowV["marca"],
+                            "modelo" => $rowV["modelo"],
+                            "anio" => $rowV["anio"],
+                            "placas" => $rowV["placas"],
+                            "color" => $rowV["color"]                                                      
+                        ));
+                    }
                     array_push($resArr, array(
                         "visita_id" => $row["visita_id"],
                         "nombre" => $row["nombre"],
@@ -52,6 +65,18 @@
                         "tipo_ingreso" => $row["tipo_ingreso"],
                         "id_tipo_ingreso" => $row["tipo_ingreso"],
                         "id_tipo_visita" => $row["tipo_visita"],
+                        "nameAutor" => $row["nameAutor"],
+                        "emailAutor" => $row["emailAutor"],
+                        "seccion" => $row["seccion"],
+                        "num_int" => $row["num_int"],
+                        "residencial" => $row["residencial"],
+                        "calle" => $row["calle"],
+                        "colonia" => $row["colonia"],
+                        "num_ext" => $row["num_ext"],
+                        "ciudad" => $row["ciudad"],
+                        "estado" => $row["estado"],
+                        "cp" => $row["cp"],
+                        "vehicles" => $resVehicles
                     ));
                 }
                 return $resArr;
