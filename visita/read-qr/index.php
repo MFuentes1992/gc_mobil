@@ -18,7 +18,6 @@
     } else if(isset($_POST["qr"])) {
         $qr = $_POST["qr"];
         $casetaId = $_POST["casetaId"];
-        $visitaId = $_POST["visitaId"];
         $type = $_POST["type"];
         if($qr == "" || $qr == null) {
             header("HTTP/1.1 400 ERROR");
@@ -32,12 +31,6 @@
             echo json_encode($msg);    
             return;
         }
-        if($visitaId == "" || $visitaId == null) {
-            header("HTTP/1.1 400 ERROR");
-            $msg = array("estatus"=> "400", "message"=>"Visita ID is required");
-            echo json_encode($msg);    
-            return;
-        }
         if($type == "" || $type == null) {
             header("HTTP/1.1 400 ERROR");
             $msg = array("estatus"=> "400", "message"=>"Type is required");
@@ -46,22 +39,28 @@
         }
         $service = new VisitaService();
         if($type == "entry") {
-            $res = $service->registerQREntry($visitaId, $casetaId);
-            if($res) {
+            $res = $service->registerQREntry($qr, $casetaId);            
+            if($res == 1) {
                 header("HTTP/1.1 200 OK");
                 echo json_encode(array("estatus"=> "200", "message"=>"Entrada registrada."));
-            } else {
+            } else if($res == 0) {
                 header("HTTP/1.1 400 ERROR");
                 echo json_encode(array("estatus"=> "400", "message"=>"El usuario ya ha registrado su entrada, por favor registre su salida."));
-            }
-        } else {
-            $res = $service->registerQRExit($visitaId, $casetaId);
-            if($res) {
-                header("HTTP/1.1 200 OK");
-                echo json_encode(array("estatus"=> "200", "message"=>"Salida registrada."));
             } else {
                 header("HTTP/1.1 400 ERROR");
+                echo json_encode(array("estatus"=> "400", "message"=>"No se puede registrar la entrada, por favor verifique que se permita la multiple entrada."));
+            }
+        } else {
+            $res = $service->registerQRExit($qr, $casetaId);
+            if($res == 1) {
+                header("HTTP/1.1 200 OK");
+                echo json_encode(array("estatus"=> "200", "message"=>"Salida registrada."));
+            } else if($res == 0) {
+                header("HTTP/1.1 400 ERROR");
                 echo json_encode(array("estatus"=> "400", "message"=>"El usuario no ha registrado su entrada, por favor registre su entrada."));
+            } else {
+                header("HTTP/1.1 400 ERROR");
+                echo json_encode(array("estatus"=> "400", "message"=>"No se puede registrar la salida, por favor verifique que se permita la multiple entrada."));
             }
         }
 

@@ -45,9 +45,9 @@
             }
         }
 
-        public function selectFromWithVisitaId(int $visitaId){
+        public function selectFromWithVisitaId(int $idVisita){
             try {
-                $query = sprintf("SELECT * FROM %s WHERE id_visita = %d ORDER BY id DESC LIMIT 1", $this->table, $visitaId);
+                $query = sprintf("SELECT * FROM %s WHERE id_visita = %d ORDER BY id DESC LIMIT 1", $this->table, $idVisita);
                 $resQuery = $this->execQuery($query);
                 $bitacora = new Bitacora();
                 if($resQuery && $resQuery->num_rows > 0) {
@@ -59,6 +59,20 @@
                     $bitacora->setTipoRegistro($row["tipo_registro"]);
                 }
                 return $bitacora;
+            } catch (\Throwable $th) {
+                echo $th;
+            }
+        }
+
+        public function getTotalEntriesWhereIdVisita(int $idVisita) {
+            try {
+                $query = sprintf("SELECT COUNT(*) FROM %s WHERE id_visita = %d", $this->table, $idVisita);
+                $resQuery = $this->execQuery($query);
+                if($resQuery && $resQuery->num_rows > 0) {
+                    $row = $resQuery->fetch_array();
+                    return $row[0];
+                }
+                return 0;
             } catch (\Throwable $th) {
                 echo $th;
             }
