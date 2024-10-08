@@ -1,38 +1,60 @@
 <?php 
     require_once $_SERVER['DOCUMENT_ROOT']."/model/BitacoraModel.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/model/VisitaModel.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/model/VisitaObjectModel.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/repository/BitacoraRepository.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/repository/VisitaRepository.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/sessionManager/SessionManager.php";
     
     Class VisitaService {
         private $bitacoraRepository;
+        private $visitaRepository;
         private $visitaModel;
+
         function __construct() {
             $session = new SessionManager();
             $connValues = $session->getSession("userConn");
-            $this->bitacoraRepository = new BitacoraRepository($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);        
+            $this->bitacoraRepository = new BitacoraRepository($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
+            $this->visitaRepository = new VisitaRepository($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
+
             $this->visitaModel = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
         }
 
-        public function registerQREntry(int $visitaId, int $casetaId) {
-            $existingEntry = $this->bitacoraRepository->selectFromWithVisitaId($visitaId);
-            if(strcmp($existingEntry->getTipoRegistro(), "salida") == 0 || $existingEntry->getVisitaId() == 0) {
-                $res = $this->bitacoraRepository->InsertInto($visitaId, $casetaId, "entrada");
-                return $res;
-            } else {
-                return false;
+        public function registerQREntry(string $qr, int $casetaId) {
+            $visitaObjectModel = $this->visitaRepository->getVisitaByQr($qr);
+            $existingEntry = $this->bitacoraRepository->selectFromWithVisitaId($visitaObjectModel->getId());
+            $totalBitacoraEntries = $this->bitacoraRepository->getTotalEntriesWhereIdVisita($visitaObjectModel->getId());
+
+            if(strcmp($existingEntry->getTipoRegistro(), "salida") == 0 && $totalBitacoraEntries >= 2 && $visitaObjectModel->getMultipleEntrada() == 0) {
+                return -1;
             }
-            return false;
+
+
+            if((strcmp($existingEntry->getTipoRegistro(), "salida") == 0 || $existingEntry->getVisitaId() == 0)) {
+                $res = $this->bitacoraRepository->InsertInto($visitaObjectModel->getId(), $casetaId, "entrada");
+                return $res ? 1 : 0;
+            } else {
+                return 0;
+            }
+            return 0;
         }
 
-        public function registerQRExit(int $visitaId, int $casetaId) {
-            $existingEntry = $this->bitacoraRepository->selectFromWithVisitaId($visitaId);
-            if(strcmp($existingEntry->getTipoRegistro(), "entrada") == 0 || $existingEntry->getVisitaId() == 0) {
-                $res = $this->bitacoraRepository->InsertInto($visitaId, $casetaId, "salida");
-                return $res;
-            } else {
-                return false;
+        public function registerQRExit(string $qr, int $casetaId) {
+            $visitaObjectModel = $this->visitaRepository->getVisitaByQr($qr);
+            $existingEntry = $this->bitacoraRepository->selectFromWithVisitaId($visitaObjectModel->getId());
+            $totalBitacoraEntries = $this->bitacoraRepository->getTotalEntriesWhereIdVisita($visitaObjectModel->getId());
+
+            if(strcmp($existingEntry->getTipoRegistro(), "entrada") == 0 && $totalBitacoraEntries >= 2 && $visitaObjectModel->getMultipleEntrada() == 0) {
+                return -1;
             }
+
+            if(strcmp($existingEntry->getTipoRegistro(), "entrada") == 0 || $existingEntry->getVisitaId() == 0) {
+                $res = $this->bitacoraRepository->InsertInto($visitaObjectModel->getId(), $casetaId, "salida");
+                return $res ? 1 : 0;
+            } else {
+                return 0;
+            }
+            return 0;
         }
 
         public function getVisitByQR(string $qr) {
