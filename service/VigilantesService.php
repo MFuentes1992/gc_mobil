@@ -22,8 +22,14 @@
             return $res;
         }
 
-        public function getLogsByCasetaId(int $casetaId) {
-            $res = $this->vigilanteRepository->getAllRegisteredLogsByCasetaId($casetaId);            
+        public function getLogsByCasetaId(int $casetaId, int $tipoVisita, string $fechaInicio, string $fechaFin, int $tipoIngreso) {
+            $res = null;
+            if($tipoVisita == 0 && $fechaInicio == "" &&  $fechaFin == "" && $tipoIngreso == 0) {
+                $res = $this->vigilanteRepository->getAllRegisteredLogsByCasetaId($casetaId); 
+            } else {
+                $res = $this->vigilanteRepository->getAllRegisteredLogsQueryBuilder($casetaId, $tipoVisita, $fechaInicio, $fechaFin, $tipoIngreso);
+            }
+            // $res = $this->vigilanteRepository->getAllRegisteredLogsByCasetaId($casetaId); 
             $arrayRes = array();
             foreach($res as $log) {
                 $log->setFechaLectura(date("Y-m-d H:i:s", strtotime($log->getFechaLectura())));
