@@ -9,8 +9,7 @@
         private $model;
         private $vigilanteRepository;
 
-        function __construct() {
-            session_start();
+        function __construct() {            
             $session = new SessionManager();
             $connValues = $session->getSession("userConn");
             $this->model = new Vigilante($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);        
@@ -37,6 +36,10 @@
                     "id_visita" => $log->getIdVisita(),
                     "id_bitacora" => $log->getIdBitacora(),
                     "id_instalacion" => $log->getIdInstalacion(),
+                    "id_tipo_visita" => $log->getIdTipoVisita(),
+                    "id_tipo_ingreso" => $log->getIdTipoIngreso(),
+                    "tipo_visita" => $log->getTipoVisita(),
+                    "tipo_ingreso" => $log->getTipoIngreso(),
                     "seccion" => $log->getSeccion(),
                     "numero" => $log->getNumero(),
                     "nombre_visita" => $log->getNombreVisita(),
