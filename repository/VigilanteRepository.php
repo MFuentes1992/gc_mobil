@@ -14,6 +14,10 @@
                     v.id as id_visita, 
                     b.id as id_bitacora, 
                     i.id as id_instalacion, 
+                    v.id_tipo_visita,
+                    v.id_tipo_ingreso,
+                    lst_v.tipo_visita,
+                    lst_i.tipo_ingreso,
                     i.seccion, i.numero, 
                     v.nombre_visita, 
                     b.fecha_lectura 
@@ -22,6 +26,10 @@
                     ON b.id_visita = v.id 
                     INNER JOIN instalaciones i 
                     ON v.id_instalacion = i.id 
+                    INNER JOIN lst_tipo_visita lst_v
+                    ON v.id_tipo_visita = lst_v.id
+                    INNER JOIN lst_tipo_ingreso_visita lst_i
+                    ON v.id_tipo_ingreso = lst_i.id
                     INNER JOIN info_caseta_vigilancia cv
                     ON b.id_caseta = cv.id
                     WHERE b.id_caseta = %d AND cv.estatus_registro = 1", $casetaId);
@@ -29,7 +37,7 @@
                 $logs = array();
                 if($resQuery && $resQuery->num_rows > 0) {
                     while($row = $resQuery->fetch_array()) {
-                        $log = new LogsGetAllResponse($row["id_visita"], $row["id_bitacora"], $row["id_instalacion"], $row["seccion"], $row["numero"], $row["nombre_visita"], $row["fecha_lectura"]);
+                        $log = new LogsGetAllResponse($row["id_visita"], $row["id_bitacora"], $row["id_instalacion"], $row["seccion"], $row["numero"], $row["nombre_visita"], $row["fecha_lectura"], $row["id_tipo_visita"], $row["id_tipo_ingreso"], $row["tipo_visita"], $row["tipo_ingreso"]);
                         array_push($logs, $log);
                     }
                 }
@@ -47,6 +55,10 @@
                     v.id as id_visita, 
                     b.id as id_bitacora, 
                     i.id as id_instalacion, 
+                    v.id_tipo_visita,
+                    v.id_tipo_ingreso,
+                    lst_v.tipo_visita,
+                    lst_i.tipo_ingreso,
                     i.seccion, i.numero, 
                     v.nombre_visita, 
                     b.fecha_lectura 
@@ -55,6 +67,10 @@
                     ON b.id_visita = v.id 
                     INNER JOIN instalaciones i 
                     ON v.id_instalacion = i.id 
+                    INNER JOIN lst_tipo_visita lst_v
+                    ON v.id_tipo_visita = lst_v.id
+                    INNER JOIN lst_tipo_ingreso_visita lst_i
+                    ON v.id_tipo_ingreso = lst_i.id
                     INNER JOIN info_caseta_vigilancia cv
                     ON b.id_caseta = cv.id
                     WHERE b.id_caseta = ".$casetaId;
@@ -69,7 +85,7 @@
                 $logs = array();
                 if($resQuery && $resQuery->num_rows > 0) {
                     while($row = $resQuery->fetch_array()) {
-                        $log = new LogsGetAllResponse($row["id_visita"], $row["id_bitacora"], $row["id_instalacion"], $row["seccion"], $row["numero"], $row["nombre_visita"], $row["fecha_lectura"]);
+                        $log = new LogsGetAllResponse($row["id_visita"], $row["id_bitacora"], $row["id_instalacion"], $row["seccion"], $row["numero"], $row["nombre_visita"], $row["fecha_lectura"], $row["id_tipo_visita"], $row["id_tipo_ingreso"], $row["tipo_visita"], $row["tipo_ingreso"]);
                         array_push($logs, $log);
                     }
                 }

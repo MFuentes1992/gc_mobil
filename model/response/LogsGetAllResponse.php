@@ -3,12 +3,16 @@
         private $idVisita;
         private $idBitacora;
         private $idInstalacion;
+        private $idTipoVisita;
+        private $idTipoIngreso;
+        private $tipoVisita;
+        private $tipoIngreso;
         private $seccion;
         private $numero;
         private $nombreVisita;
         private $fechaLectura;
 
-        public function __construct($idVisita, $idBitacora, $idInstalacion, $seccion, $numero, $nombreVisita, $fechaLectura) {
+        public function __construct($idVisita, $idBitacora, $idInstalacion, $seccion, $numero, $nombreVisita, $fechaLectura, $idTipoVisita, $idTipoIngreso, $tipoVisita, $tipoIngreso) {
             $this->idVisita = $idVisita;
             $this->idBitacora = $idBitacora;
             $this->idInstalacion = $idInstalacion;
@@ -16,6 +20,11 @@
             $this->numero = $numero;
             $this->nombreVisita = $nombreVisita;
             $this->fechaLectura = $fechaLectura;
+            $this->idTipoVisita = $idTipoVisita;
+            $this->idTipoIngreso = $idTipoIngreso;
+            $this->tipoVisita = $tipoVisita;
+            $this->tipoIngreso = $tipoIngreso;
+
         }
 
         public function getIdVisita() {
@@ -74,8 +83,44 @@
             $this->fechaLectura = $fechaLectura;
         }
 
+        public function getIdTipoVisita() {
+            return $this->idTipoVisita;
+        }
+
+        public function setIdTipoVisita($idTipoVisita) {
+            $this->idTipoVisita = $idTipoVisita;
+        }
+
+        public function getIdTipoIngreso() {
+            return $this->idTipoIngreso;
+        }
+
+        public function setIdTipoIngreso($idTipoIngreso) {
+            $this->idTipoIngreso = $idTipoIngreso;
+        }
+
+        public function getTipoVisita() {
+            return $this->tipoVisita;
+        }
+
+        public function setTipoVisita($tipoVisita) {
+            $this->tipoVisita = $tipoVisita;
+        }
+
+        public function getTipoIngreso() {
+            return $this->tipoIngreso;
+        }
+
+        public function setTipoIngreso($tipoIngreso) {
+            $this->tipoIngreso = $tipoIngreso;
+        }
+
+        // fix to include idTipoVisita and idTipoIngreso
         public function __toString() {
-            return "LogsGetAll [idVisita=" . $this->idVisita . ", idBitacora=" . $this->idBitacora . ", idInstalacion=" . $this->idInstalacion . ", seccion=" . $this->seccion . ", numero=" . $this->numero . ", nombreVisita=" . $this->nombreVisita . ", fechaLectura=" . $this->fechaLectura . "]";
+
+            return "LogsGetAll [idVisita=" . 
+            $this->idVisita . 
+            ", idBitacora=" . $this->idBitacora . ", idInstalacion=" . $this->idInstalacion . ", seccion=" . $this->seccion . ", numero=" . $this->numero . ", nombreVisita=" . $this->nombreVisita . ", fechaLectura=" . $this->fechaLectura .  "". "]";
         }
     }
 
