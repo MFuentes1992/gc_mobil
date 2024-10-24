@@ -2,6 +2,7 @@
     require_once $_SERVER['DOCUMENT_ROOT']."/service/VigilantesService.php"; 
 
     //GET_CONTROLLER
+    session_start();
     if(isset($_GET)) {
         $query = $_GET["activation_code"];
         if(isset($query)){
