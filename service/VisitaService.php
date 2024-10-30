@@ -20,6 +20,39 @@
             $this->visitaModel = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
         }
 
+        public function createVisita(int $idUsuario, int $idTipoVisita, int $idTipoIngreso, int $idInstalacion, string $fechaIngreso, string $fechaSalida,
+        int $multipleEntrada, int $notificaciones, string $nombreVisita, int $estatusRegistro, string $vehicles) {
+            $visitaObjectModel = new VisitaObjectModel();
+            $vehicleArr = json_decode($vehicles, true);
+            $vehicles = array();
+            foreach($vehicleArr as $vehicle) {
+                $vehicleModel = new Vehicle(0, 0, $vehicle["driver"], $vehicle["brand"], $vehicle["model"], $vehicle["year"], $vehicle["plates"], $vehicle["color"],"", "", 1);
+                array_push($vehicles, $vehicleModel);
+            }
+            $visitaObjectModel->init(
+                0,
+                $idUsuario,
+                $idTipoVisita,
+                $idTipoIngreso,
+                $idInstalacion,
+                $fechaIngreso,
+                $fechaSalida,
+                $multipleEntrada,
+                $notificaciones,
+                1,
+                1,
+                uniqid('', true),
+                $nombreVisita,
+                "",
+                "",
+                $estatusRegistro,
+                $vehicles
+            );
+            $res = $this->visitaRepository->createVisita($visitaObjectModel);
+            return $res;
+
+        }
+
         public function registerQREntry(string $qr, int $casetaId) {
             $visitaObjectModel = $this->visitaRepository->getVisitaByQr($qr);
             $existingEntry = $this->bitacoraRepository->selectFromWithVisitaId($visitaObjectModel->getId());

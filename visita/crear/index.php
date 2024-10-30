@@ -1,6 +1,7 @@
 <?php
     require_once $_SERVER['DOCUMENT_ROOT']."/model/VisitaModel.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/constants/constants.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/service/VisitaService.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/sessionManager/SessionManager.php"; 
     session_start();
     $payload = $_POST;
@@ -8,7 +9,8 @@
     $connValues = $session->getSession("userConn");
     $model = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]); 
     
-    $res = $model->createVisita(intval($payload["idUsuario"]), intval($payload["tipoVisita"]), intval($payload["tipoIngreso"]),
+    $visitaService = new VisitaService();
+    $res = $visitaService->createVisita(intval($payload["idUsuario"]), intval($payload["tipoVisita"]), intval($payload["tipoIngreso"]),
     $payload["idInstalacion"],
     $payload["fechaIngreso"], $payload["fechaSalida"],
     intval($payload["multEntry"]), intval($payload["notificacion"]), $payload["nombre"],
