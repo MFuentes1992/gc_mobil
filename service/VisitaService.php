@@ -61,6 +61,37 @@
 
         }
 
+        public function updateVisita(int $idVisita, int $idTipoVisita, int $idTipoIngreso, string $fechaIngreso, 
+        string $fechaSalida, int $multipleEntrada, int $notificaciones, string $nombreVisita, 
+        int $estatusRegistro, string $vehicles, string $pedestrians) {
+            $currentVisita = $this->getVisitaInfoById($idVisita);
+            $vehicleArr = json_decode($vehicles, true);
+            $pedestriansArr = json_decode($pedestrians, true);
+            $vehicles = array();
+            $pedestrians = array();
+            foreach($vehicleArr as $vehicle) {
+                $vehicleModel = new Vehicle($vehicle["vehicle_id"], $idVisita, $vehicle["driver"], $vehicle["brand"], $vehicle["model"], $vehicle["year"], $vehicle["plates"], $vehicle["color"],"", "", 1);
+                array_push($vehicles, $vehicleModel);
+            }
+            foreach($pedestriansArr as $pedestrian) {
+                $pedestrianModel = new VisitasPeaton($pedestrian["pedestrian_id"], $idVisita, $pedestrian["nombre"], "", "", 1);
+                array_push($pedestrians, $pedestrianModel);
+            }
+            $currentVisita->setVehicles($vehicles);
+            $currentVisita->setPedestrians($pedestrians);
+            $currentVisita->setNombreVisita($nombreVisita);
+            $currentVisita->setIdTipoIngreso($idTipoIngreso);
+            $currentVisita->setIdTipoVisita($idTipoVisita);
+            $currentVisita->setFechaIngreso($fechaIngreso);
+            $currentVisita->setFechaSalida($fechaSalida);
+            $currentVisita->setMultipleEntrada($multipleEntrada);
+            $currentVisita->setNotificaciones($notificaciones);
+            $currentVisita->setEstatusRegistro($estatusRegistro);
+
+            $res = $this->visitaRepository->updateVisita($currentVisita);
+            return $res;
+        }
+
         public function registerQREntry(string $qr, int $casetaId) {
             $visitaObjectModel = $this->visitaRepository->getVisitaByQr($qr);
             $existingEntry = $this->bitacoraRepository->selectFromWithVisitaId($visitaObjectModel->getId());
@@ -78,6 +109,68 @@
                 return 0;
             }
             return 0;
+        }
+
+        public function getVisitaInfoById(int $idVisita) {
+            $res = $this->visitaRepository->getVisitaById($idVisita);
+            $resVehicles = $this->visitaRepository->getVehiclesByVisit($idVisita);
+            $resPedestrians = $this->visitaRepository->getPedestriansByVisit($idVisita);
+            $visita = new VisitaObjectModel();
+            if($res && $res->num_rows > 0 
+            && $resVehicles && $resVehicles->num_rows > 0
+            && $resPedestrians && $resPedestrians->num_rows > 0) {
+                $rowVisita = $res->fetch_array();
+                $resVehiclesArr = array();
+                $resPedestriansArr = array();
+                while($rowV = $resVehicles->fetch_array()) {
+                    array_push($resVehiclesArr, array(
+                        "vehicle_id" => $rowV["vehicle_id"],
+                        "marca" => $rowV["marca"],
+                        "modelo" => $rowV["modelo"],
+                        "anio" => $rowV["anio"],
+                        "placas" => $rowV["placas"],
+                        "color" => $rowV["color"]                                                      
+                    ));
+                }
+
+                while($rowP = $resPedestrians->fetch_array()) {
+                    array_push($resPedestriansArr, array(
+                        "pedestrian_id" => $rowP["pedestrian_id"],
+                        "nombre" => $rowP["nombre"]
+                    ));
+                }
+
+                $visita->init(
+                    $rowVisita["visita_id"],
+                    $rowVisita["id_usuario"],
+                    $rowVisita["id_tipo_visita"],
+                    $rowVisita["id_tipo_ingreso"],
+                    $rowVisita["id_instalacion"],
+                    $rowVisita["desde"],
+                    $rowVisita["hasta"],
+                    $rowVisita["multiple_entrada"],
+                    $rowVisita["notificaciones"],
+                    $rowVisita["estatus_registro"],
+                    $rowVisita["tipo_ingreso"],
+                    $rowVisita["uniqueID"],
+                    $rowVisita["nombre"],
+                    $rowVisita["nameAutor"],
+                    $rowVisita["emailAutor"],
+                    $rowVisita["seccion"],
+                    $rowVisita["num_int"],
+                    $rowVisita["residencial"],
+                    $rowVisita["calle"],
+                    $rowVisita["colonia"],
+                    $rowVisita["num_ext"],
+                    $rowVisita["ciudad"],
+                    $rowVisita["estado"],
+                    $rowVisita["cp"],
+                    $resVehiclesArr,
+                    $resPedestriansArr
+                );
+                return $visita;
+            }
+                
         }
 
         public function registerQRExit(string $qr, int $casetaId) {

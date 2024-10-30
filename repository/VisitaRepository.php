@@ -89,26 +89,47 @@
             }            
         }
     
-            public function updateVisita(int $idVisita, int $idTipoVisita, int $idTipoIngreso, string $fechaIngreso, string $fechaSalida, int $multipleEntrada, int $notificaciones, string $nombreVisita, int $estatusRegistro, string $vehicles) {
+            public function updateVisita(VisitaObjectModel $visita) {
                 try {
-                    $query = sprintf("UPDATE `visitas` SET `id_tipo_visita` = %d, `id_tipo_ingreso` = %d, `fecha_ingreso` = '%s', `fecha_salida` = '%s', `multiple_entrada` = %d, `notificaciones` = %d, `nombre_visita` = '%s', `fecha_actualizacion` = '%s', `estatus_registro` = %d WHERE `id` = %d", $idTipoVisita, $idTipoIngreso, $fechaIngreso, $fechaSalida, $multipleEntrada, $notificaciones, $nombreVisita, date("Y-m-d H:i:s"), $estatusRegistro, $idVisita);
+                    $query = sprintf("UPDATE `visitas` 
+                        SET `id_tipo_visita` = %d, 
+                        `id_tipo_ingreso` = %d, 
+                        `fecha_ingreso` = '%s', 
+                        `fecha_salida` = '%s', 
+                        `multiple_entrada` = %d, 
+                        `notificaciones` = %d, 
+                        `nombre_visita` = '%s', 
+                        `fecha_actualizacion` = '%s', 
+                        `estatus_registro` = %d WHERE `id` = %d", 
+                        $visita->getIdTipoVisita(), 
+                        $visita->getIdTipoIngreso(), 
+                        $visita->getFechaIngreso(), 
+                        $visita->getFechaSalida(), 
+                        $visita->getMultipleEntrada(), 
+                        $visita->getNotificaciones(),
+                        $visita->getNombreVisita(),
+                        date("Y-m-d H:i:s"), 
+                        $visita->getEstatusRegistro(), 
+                        $visita->getId()
+                    );
                     $res = $this->execQuery($query);                
-                    if($res) {                    
-                        $data = json_decode($vehicles, true);                                        
-                        foreach($data as $vehicle) {
-                            $vehicleId = $vehicle["vehicle_id"];
+                    if($res) {                                                                                   
+                        foreach($visita->getVehicles() as $vehicle) {
+                            $vehicleId = $vehicle->getId();
                             if(isset($vehicleId)) {
-                                $vehicleBrand = $vehicle["brand"];
-                                $vehicleModel = $vehicle["model"];
-                                $vehicleYear = $vehicle["year"];
-                                $vehiclePlates = $vehicle["plates"];
-                                $vehicleColor = $vehicle["color"];
+                                $vehicleDriver = $vehicle->getConductor();
+                                $vehicleBrand = $vehicle->getMarca();
+                                $vehicleModel = $vehicle->getModelo();
+                                $vehicleYear = $vehicle->getAnio();
+                                $vehiclePlates = $vehicle->getPlacas();
+                                $vehicleColor = $vehicle->getColor();
                                 if($vehicleModel != "" && $vehiclePlates != "" 
                                 && $vehicleColor != "" && $vehicleYear != "" 
                                 && $vehicleBrand != "") {                                                                     
-                                    $this->updateVehicle($vehicleId, $vehicleBrand, $vehicleModel, $vehicleYear, $vehiclePlates, $vehicleColor, 1);                        
+                                    $this->updateVehicle($vehicleId, $vehicleDriver, $vehicleBrand, $vehicleModel, $vehicleYear, $vehiclePlates, $vehicleColor, 1);                        
                                 }
                             } else {
+                                $vehicleDriver = $vehicle->getConductor();
                                 $vehicleBrand = $vehicle["brand"];
                                 $vehicleModel = $vehicle["model"];
                                 $vehicleYear = $vehicle["year"];
@@ -117,10 +138,21 @@
                                 if($vehicleModel != "" && $vehiclePlates != "" 
                                 && $vehicleColor != "" && $vehicleYear != "" 
                                 && $vehicleBrand != "") {                                                                     
-                                    $this->createVehiculoVisita($idVisita, "", $vehicleBrand, $vehicleModel, $vehicleYear, $vehiclePlates, $vehicleColor, 1);                        
+                                    $this->createVehiculoVisita($visita->getId(), $vehicleDriver, $vehicleBrand, $vehicleModel, $vehicleYear, $vehiclePlates, $vehicleColor, 1);                        
                                 }
                             }
                         }  
+
+                        foreach($visita->getPedestrians() as $pedestrian) {
+                            $pedestrianId = $pedestrian->getId();
+                            if(isset($pedestrianId)) {
+                                $pedestrianName = $pedestrian->getNombre();
+                                $this->updatePedestrian($pedestrianId, $pedestrianName, 1);
+                            } else {
+                                $pedestrianName = $pedestrian["nombre"];
+                                $this->createPedestrian($visita->getId(), $pedestrianName, 1);
+                            }
+                        }
                     }
                     return $res;
                 } catch (\Throwable $th) {
@@ -172,18 +204,64 @@
                 }
             }
     
-            public function updateVehicle(int $idVehicle, string $marca, string $modelo, string $anio, string $placas, string $color, int $estatusRegistro) {
+            public function updateVehicle(int $idVehicle, string $conductor, string $marca, string $modelo, string $anio, string $placas, string $color, int $estatusRegistro) {
                 try {
-                    $query = sprintf("UPDATE `visitas_vehiculos` SET `marca` = '%s', `modelo` = '%s', `anio` = '%s', `placas` = '%s', `color` = '%s', `fecha_actualizacion` = '%s', `estatus_registro` = %d WHERE `id` = %d", $marca, $modelo, $anio, $placas, $color, date("Y-m-d H:i:s"), $estatusRegistro, $idVehicle);
+                    $query = sprintf("UPDATE `visitas_vehiculos` SET `conductor` = '%s', `marca` = '%s', `modelo` = '%s', `anio` = '%s', `placas` = '%s', `color` = '%s', `fecha_actualizacion` = '%s', `estatus_registro` = %d WHERE `id` = %d", $conductor, $marca, $modelo, $anio, $placas, $color, date("Y-m-d H:i:s"), $estatusRegistro, $idVehicle);
                     return $this->execQuery($query);
                 } catch (\Throwable $th) {
                     echo $th;
                 }
             }
     
+            public function updatePedestrian(int $idPedestrian, string $nombre, int $estatusRegistro) {
+                try {
+                    $query = sprintf("UPDATE `visitas_peatones` SET `nombre` = '%s', `fecha_actualizacion` = '%s', `estatus_registro` = %d WHERE `id` = %d", 
+                    $nombre, date("Y-m-d H:i:s"), $estatusRegistro, $idPedestrian);
+                    return $this->execQuery($query);
+                } catch (\Throwable $th) {
+                    echo $th;
+                }
+            }
+
             public function deleteVehicle(int $idVehicle) {
                 try {
                     $query = sprintf("DELETE FROM `visitas_vehiculos` WHERE `id` = %d", $idVehicle);
+                    return $this->execQuery($query);
+                } catch (\Throwable $th) {
+                    echo $th;
+                }
+            }
+
+            public function deletePedestrian(int $idPedestrian) {
+                try {
+                    $query = sprintf("UPDATE `visitas_peatones` `estatus_registro` = 0 WHERE `id` = %d", $idPedestrian);
+                    return $this->execQuery($query);
+                } catch (\Throwable $th) {
+                    echo $th;
+                }
+            }
+
+            public function getVisitaById(int $idVisita) {
+                try {
+                    $query = sprintf("SELECT * FROM `visitas` WHERE `id` = %d", $idVisita);
+                    return $this->execQuery($query);
+                } catch (\Throwable $th) {
+                    echo $th;
+                }
+            }
+
+            public function getVehiclesByVisit(int $idVisita) {
+                try {
+                    $query = sprintf("SELECT * FROM `visitas_vehiculos` WHERE `id_visita` = %d", $idVisita);
+                    return $this->execQuery($query);
+                } catch (\Throwable $th) {
+                    echo $th;
+                }
+            }
+
+            public function getPedestriansByVisit(int $idVisita) {
+                try {
+                    $query = sprintf("SELECT * FROM `visitas_peatones` WHERE `id_visita` = %d", $idVisita);
                     return $this->execQuery($query);
                 } catch (\Throwable $th) {
                     echo $th;
