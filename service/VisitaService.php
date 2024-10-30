@@ -70,11 +70,11 @@
             $vehicles = array();
             $pedestrians = array();
             foreach($vehicleArr as $vehicle) {
-                $vehicleModel = new Vehicle($vehicle["vehicle_id"], $idVisita, $vehicle["driver"], $vehicle["brand"], $vehicle["model"], $vehicle["year"], $vehicle["plates"], $vehicle["color"],"", "", 1);
+                $vehicleModel = new Vehicle($vehicle["id"], $idVisita, $vehicle["driver"], $vehicle["brand"], $vehicle["model"], $vehicle["year"], $vehicle["plates"], $vehicle["color"],"", "", 1);
                 array_push($vehicles, $vehicleModel);
             }
             foreach($pedestriansArr as $pedestrian) {
-                $pedestrianModel = new VisitasPeaton($pedestrian["pedestrian_id"], $idVisita, $pedestrian["nombre"], "", "", 1);
+                $pedestrianModel = new VisitasPeaton($pedestrian["id"], $idVisita, $pedestrian["nombre"], "", "", 1);
                 array_push($pedestrians, $pedestrianModel);
             }
             $currentVisita->setVehicles($vehicles);
@@ -124,7 +124,7 @@
                 $resPedestriansArr = array();
                 while($rowV = $resVehicles->fetch_array()) {
                     array_push($resVehiclesArr, array(
-                        "vehicle_id" => $rowV["vehicle_id"],
+                        "vehicle_id" => $rowV["id"],
                         "marca" => $rowV["marca"],
                         "modelo" => $rowV["modelo"],
                         "anio" => $rowV["anio"],
@@ -135,36 +135,28 @@
 
                 while($rowP = $resPedestrians->fetch_array()) {
                     array_push($resPedestriansArr, array(
-                        "pedestrian_id" => $rowP["pedestrian_id"],
+                        "pedestrian_id" => $rowP["id"],
                         "nombre" => $rowP["nombre"]
                     ));
                 }
 
                 $visita->init(
-                    $rowVisita["visita_id"],
+                    $rowVisita["id"],
                     $rowVisita["id_usuario"],
                     $rowVisita["id_tipo_visita"],
                     $rowVisita["id_tipo_ingreso"],
                     $rowVisita["id_instalacion"],
-                    $rowVisita["desde"],
-                    $rowVisita["hasta"],
+                    $rowVisita["fecha_ingreso"],
+                    $rowVisita["fecha_salida"],
                     $rowVisita["multiple_entrada"],
                     $rowVisita["notificaciones"],
-                    $rowVisita["estatus_registro"],
-                    $rowVisita["tipo_ingreso"],
+                    $rowVisita["app_generado"],
+                    $rowVisita["vigencia_qr"],
                     $rowVisita["uniqueID"],
-                    $rowVisita["nombre"],
-                    $rowVisita["nameAutor"],
-                    $rowVisita["emailAutor"],
-                    $rowVisita["seccion"],
-                    $rowVisita["num_int"],
-                    $rowVisita["residencial"],
-                    $rowVisita["calle"],
-                    $rowVisita["colonia"],
-                    $rowVisita["num_ext"],
-                    $rowVisita["ciudad"],
-                    $rowVisita["estado"],
-                    $rowVisita["cp"],
+                    $rowVisita["nombre_visita"],
+                    $rowVisita["fecha_registro"],
+                    $rowVisita["fecha_actualizacion"],
+                    $rowVisita["estatus_registro"],
                     $resVehiclesArr,
                     $resPedestriansArr
                 );

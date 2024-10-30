@@ -149,7 +149,7 @@
                                 $pedestrianName = $pedestrian->getNombre();
                                 $this->updatePedestrian($pedestrianId, $pedestrianName, 1);
                             } else {
-                                $pedestrianName = $pedestrian["nombre"];
+                                $pedestrianName = $pedestrian->getNombre();
                                 $this->createPedestrian($visita->getId(), $pedestrianName, 1);
                             }
                         }
