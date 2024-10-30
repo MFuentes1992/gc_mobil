@@ -18,6 +18,7 @@
         private $fechaActualizacion;
         private $estatusRegistro;
         private $vehicles;
+        private $pedestrians;
 
         public function setId(int $id) {
             $this->id = $id;
@@ -155,6 +156,14 @@
             return $this->vehicles;
         }
 
+        public function setPedestrians($pedestrians) {
+            $this->pedestrians = $pedestrians;
+        }
+
+        public function getPedestrians() {
+            return $this->pedestrians;
+        }
+
         public function __construct() {
             $this->id = 0;
             $this->idUsuario = 0;
@@ -190,7 +199,7 @@
             string $fechaRegistro, 
             string $fechaActualizacion, 
             int $estatusRegistro, 
-            $vehicles) {
+            $vehicles, $pedestrians) {
                 
             $this->id = $id;
             $this->idUsuario = $idUsuario;
@@ -209,6 +218,7 @@
             $this->fechaActualizacion = $fechaActualizacion;
             $this->estatusRegistro = $estatusRegistro;
             $this->vehicles = $vehicles;
+            $this->pedestrians = $pedestrians;
         }
 
         public function toString() {

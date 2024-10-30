@@ -15,7 +15,8 @@
     $payload["fechaIngreso"], $payload["fechaSalida"],
     intval($payload["multEntry"]), intval($payload["notificacion"]), $payload["nombre"],
     1, 
-    isset($payload["vehicles"]) ? $payload["vehicles"] : "");
+    isset($payload["vehicles"]) ? $payload["vehicles"] : "",
+    isset($payload["pedestrians"]) ? $payload["pedestrians"] : "");
     if($res) {
         header("HTTP/1.1 200 OK");
         $msg = array("estatus"=> "200", "message"=>"Record created successfully", "uniqueID"=>$res);

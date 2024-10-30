@@ -20,14 +20,21 @@
             $this->visitaModel = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
         }
 
-        public function createVisita(int $idUsuario, int $idTipoVisita, int $idTipoIngreso, int $idInstalacion, string $fechaIngreso, string $fechaSalida,
-        int $multipleEntrada, int $notificaciones, string $nombreVisita, int $estatusRegistro, string $vehicles) {
+        public function createVisita(int $idUsuario, int $idTipoVisita, int $idTipoIngreso, int $idInstalacion, string $fechaIngreso, 
+        string $fechaSalida, int $multipleEntrada, int $notificaciones, string $nombreVisita, 
+        int $estatusRegistro, string $vehicles, string $pedestrians) {
             $visitaObjectModel = new VisitaObjectModel();
             $vehicleArr = json_decode($vehicles, true);
+            $pedestriansArr = json_decode($pedestrians, true);
             $vehicles = array();
+            $pedestrians = array();
             foreach($vehicleArr as $vehicle) {
                 $vehicleModel = new Vehicle(0, 0, $vehicle["driver"], $vehicle["brand"], $vehicle["model"], $vehicle["year"], $vehicle["plates"], $vehicle["color"],"", "", 1);
                 array_push($vehicles, $vehicleModel);
+            }
+            foreach($pedestriansArr as $pedestrian) {
+                $pedestrianModel = new VisitasPeaton(0, 0, $pedestrian["nombre"], "", "", 1);
+                array_push($pedestrians, $pedestrianModel);
             }
             $visitaObjectModel->init(
                 0,
@@ -46,7 +53,8 @@
                 "",
                 "",
                 $estatusRegistro,
-                $vehicles
+                $vehicles,
+                $pedestrians
             );
             $res = $this->visitaRepository->createVisita($visitaObjectModel);
             return $res;

@@ -77,6 +77,9 @@
                                 $this->createVehiculoVisita($lastId, $vehicleDriver, $vehicleBrand, $vehicleModel, $vehicleYear, $vehiclePlates, $vehicleColor, 1);                        
                             }
                         }
+                        foreach($visita->getPedestrians() as $pedestrian) {
+                            $this->createPedestrian($lastId, $pedestrian->getNombre(), $pedestrian->getEstatusRegistro());
+                        }
                         return $visita->getUniqueID();
                     } else {
                         return false;
@@ -151,6 +154,18 @@
                     $query = sprintf("INSERT INTO `visitas_vehiculos` (`id_visita`, `conductor`, `marca`, `modelo`, `anio`, `placas`, `color`, `fecha_registro`, `fecha_actualizacion`, `estatus_registro`) 
                     VALUES (%d, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', %d)", 
                     $idVisita, $driver, $marca, $modelo, $anio, $placas, $color, date("Y-m-d H:i:s"), date("Y-m-d H:i:s"), $estatusRegistro);                
+                    return $this->execQuery($query);
+                } catch (\Throwable $th) {
+                    echo $th;
+                }
+            }
+
+            //create pedestrian function
+            public function createPedestrian(int $idVisita, string $nombre, int $estatusRegistro) {
+                try {
+                    $query = sprintf("INSERT INTO `visitas_peatones` (`id_visita`, `nombre`, `fecha_registro`, `fecha_actualizacion`, `estatus_registro`) 
+                    VALUES (%d, '%s', '%s', '%s', %d)", 
+                    $idVisita, $nombre, date("Y-m-d H:i:s"), date("Y-m-d H:i:s"), $estatusRegistro);                
                     return $this->execQuery($query);
                 } catch (\Throwable $th) {
                     echo $th;
