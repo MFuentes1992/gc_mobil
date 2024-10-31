@@ -1,4 +1,5 @@
 <?php 
+    require_once $_SERVER['DOCUMENT_ROOT']."/model/VehicleModel.php";
     Class VisitaObjectModel {
         private $id;
         private $idUsuario;
@@ -16,6 +17,8 @@
         private $fechaRegistro;
         private $fechaActualizacion;
         private $estatusRegistro;
+        private $vehicles;
+        private $pedestrians;
 
         public function setId(int $id) {
             $this->id = $id;
@@ -145,6 +148,22 @@
             return $this->estatusRegistro;
         }
 
+        public function setVehicles($vehicles) {
+            $this->vehicles = $vehicles;
+        }
+
+        public function getVehicles() {
+            return $this->vehicles;
+        }
+
+        public function setPedestrians($pedestrians) {
+            $this->pedestrians = $pedestrians;
+        }
+
+        public function getPedestrians() {
+            return $this->pedestrians;
+        }
+
         public function __construct() {
             $this->id = 0;
             $this->idUsuario = 0;
@@ -162,6 +181,44 @@
             $this->fechaRegistro = "";
             $this->fechaActualizacion = "";
             $this->estatusRegistro = 0;
+        }
+
+        public function init(int $id, 
+            int $idUsuario, 
+            int $idTipoVisita, 
+            int $idTipoIngreso, 
+            int $idInstalacion, 
+            string $fechaIngreso, 
+            string $fechaSalida, 
+            int $multipleEntrada, 
+            int $notificaciones, 
+            int $appGenerado, 
+            string $vigenciaQR, 
+            string $uniqueID, 
+            string $nombreVisita, 
+            string $fechaRegistro, 
+            string $fechaActualizacion, 
+            int $estatusRegistro, 
+            $vehicles, $pedestrians) {
+                
+            $this->id = $id;
+            $this->idUsuario = $idUsuario;
+            $this->idTipoVisita = $idTipoVisita;
+            $this->idTipoIngreso = $idTipoIngreso;
+            $this->idInstalacion = $idInstalacion;
+            $this->fechaIngreso = $fechaIngreso;
+            $this->fechaSalida = $fechaSalida;
+            $this->multipleEntrada = $multipleEntrada;
+            $this->notificaciones = $notificaciones;
+            $this->appGenerado = $appGenerado;
+            $this->vigenciaQR = $vigenciaQR;
+            $this->uniqueID = $uniqueID;
+            $this->nombreVisita = $nombreVisita;
+            $this->fechaRegistro = $fechaRegistro;
+            $this->fechaActualizacion = $fechaActualizacion;
+            $this->estatusRegistro = $estatusRegistro;
+            $this->vehicles = $vehicles;
+            $this->pedestrians = $pedestrians;
         }
 
         public function toString() {

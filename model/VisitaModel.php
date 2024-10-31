@@ -319,6 +319,7 @@
             try {                
                 $query = sprintf("SELECT 
                 vv.id as vehicle_id,
+                vv.conductor as conductor,
                 vv.marca as marca,
                 vv.modelo as modelo,
                 vv.anio as anio,

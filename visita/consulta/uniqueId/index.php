@@ -1,26 +1,28 @@
 <?php 
-    require_once $_SERVER['DOCUMENT_ROOT']."/model/VisitaModel.php";
-    require_once $_SERVER['DOCUMENT_ROOT']."/sessionManager/SessionManager.php";
+    /**
+    * Autor: Marco Fuentes.
+    * Obtiene la visita por medio del QR, este endpoint es utilizado por el usuario residente, no genera logs en bitacora.
+    * Method: GET
+    * Respuesta en formato JSON
+    */
+    
+    require_once $_SERVER['DOCUMENT_ROOT']."/service/VisitaService.php";
     session_start();
-    $query = $_GET;
-    if(isset($query["uniqueId"])) {
-        $session = new SessionManager();
-        $connValues = $session->getSession("userConn");
-        $model = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
-        $res = $model->getVisitaById($query["uniqueId"]);
-        if($res && $res->num_rows > 0) {
-            $row = $res->fetch_array();
+    if(isset($_GET)) {
+        $uniqueId = $_GET["uniqueId"];
+        $service = new VisitaService();
+        $visitaResponse = $service->getVisitByQR($uniqueId);
+        if($visitaResponse) {
             header("HTTP/1.1 200 OK");
-            echo json_encode($row); 
+            echo json_encode($visitaResponse); 
         } else {
             header("HTTP/1.1 500 ERROR");
-            $msg = array("estatus"=> "400", "message"=>"No se pudo obtener la visita.");
+            $msg = array("estatus"=> "500", "message"=>"No se pudo obtener la visita.");
             echo json_encode($msg);    
         }
     } else {
         header("HTTP/1.1 400 ERROR");
-        $msg = array("estatus"=> "400", "message"=>"Algo salió mal.");
+        $msg = array("estatus"=> "400", "message"=>"No se proporcionaron los datos necesarios.");
         echo json_encode($msg);    
     }
-
 ?>
