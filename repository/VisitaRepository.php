@@ -116,7 +116,7 @@
                     if($res) {                                                                                   
                         foreach($visita->getVehicles() as $vehicle) {
                             $vehicleId = $vehicle->getId();
-                            if(isset($vehicleId)) {
+                            if(isset($vehicleId) && $vehicleId > 0) {
                                 $vehicleDriver = $vehicle->getConductor();
                                 $vehicleBrand = $vehicle->getMarca();
                                 $vehicleModel = $vehicle->getModelo();
@@ -130,11 +130,11 @@
                                 }
                             } else {
                                 $vehicleDriver = $vehicle->getConductor();
-                                $vehicleBrand = $vehicle["brand"];
-                                $vehicleModel = $vehicle["model"];
-                                $vehicleYear = $vehicle["year"];
-                                $vehiclePlates = $vehicle["plates"];
-                                $vehicleColor = $vehicle["color"];
+                                $vehicleBrand = $vehicle->getMarca();
+                                $vehicleModel = $vehicle->getModelo();
+                                $vehicleYear = $vehicle->getAnio();
+                                $vehiclePlates = $vehicle->getPlacas();
+                                $vehicleColor = $vehicle->getColor();
                                 if($vehicleModel != "" && $vehiclePlates != "" 
                                 && $vehicleColor != "" && $vehicleYear != "" 
                                 && $vehicleBrand != "") {                                                                     

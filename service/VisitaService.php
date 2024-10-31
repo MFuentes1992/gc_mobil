@@ -111,33 +111,48 @@
             return 0;
         }
 
+        public function updateVehicles($idVisita, $vehicle) {
+            $currentVisita = $this->getVisitaInfoById($idVisita);
+            $vehicleArr = json_decode($vehicle, true);
+            $vehicles = array();
+            foreach($vehicleArr as $vehicle) {
+                $vehicleModel = new Vehicle(isset($vehicle["id"]) ? $vehicle["id"]: 0, $idVisita, $vehicle["driver"], $vehicle["brand"], $vehicle["model"], $vehicle["year"], $vehicle["plates"], $vehicle["color"],"", "", 1);
+                array_push($vehicles, $vehicleModel);
+            }
+            $currentVisita->setVehicles($vehicles);
+            $res = $this->visitaRepository->updateVisita($currentVisita);
+            return $res;
+        }
+
         public function getVisitaInfoById(int $idVisita) {
             $res = $this->visitaRepository->getVisitaById($idVisita);
             $resVehicles = $this->visitaRepository->getVehiclesByVisit($idVisita);
             $resPedestrians = $this->visitaRepository->getPedestriansByVisit($idVisita);
             $visita = new VisitaObjectModel();
-            if($res && $res->num_rows > 0 
-            && $resVehicles && $resVehicles->num_rows > 0
-            && $resPedestrians && $resPedestrians->num_rows > 0) {
+            if($res && $res->num_rows > 0 ) {
                 $rowVisita = $res->fetch_array();
                 $resVehiclesArr = array();
                 $resPedestriansArr = array();
-                while($rowV = $resVehicles->fetch_array()) {
-                    array_push($resVehiclesArr, array(
-                        "vehicle_id" => $rowV["id"],
-                        "marca" => $rowV["marca"],
-                        "modelo" => $rowV["modelo"],
-                        "anio" => $rowV["anio"],
-                        "placas" => $rowV["placas"],
-                        "color" => $rowV["color"]                                                      
-                    ));
+                if($resVehicles) {
+                    while($rowV = $resVehicles->fetch_array()) {
+                        array_push($resVehiclesArr, array(
+                            "vehicle_id" => $rowV["id"],
+                            "marca" => $rowV["marca"],
+                            "modelo" => $rowV["modelo"],
+                            "anio" => $rowV["anio"],
+                            "placas" => $rowV["placas"],
+                            "color" => $rowV["color"]                                                      
+                        ));
+                    }
                 }
 
-                while($rowP = $resPedestrians->fetch_array()) {
-                    array_push($resPedestriansArr, array(
-                        "pedestrian_id" => $rowP["id"],
-                        "nombre" => $rowP["nombre"]
-                    ));
+                if($resPedestrians) {
+                    while($rowP = $resPedestrians->fetch_array()) {
+                        array_push($resPedestriansArr, array(
+                            "pedestrian_id" => $rowP["id"],
+                            "nombre" => $rowP["nombre"]
+                        ));
+                    }
                 }
 
                 $visita->init(
