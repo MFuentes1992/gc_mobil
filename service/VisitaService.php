@@ -111,7 +111,7 @@
             return 0;
         }
 
-        public function updateVehicles($idVisita, $vehicle) {
+        public function saveVehicle($idVisita, $vehicle) {
             $currentVisita = $this->getVisitaInfoById($idVisita);
             $vehicleArr = json_decode($vehicle, true);
             $vehicles = array();
@@ -120,6 +120,19 @@
                 array_push($vehicles, $vehicleModel);
             }
             $currentVisita->setVehicles($vehicles);
+            $res = $this->visitaRepository->updateVisita($currentVisita);
+            return $res;
+        }
+
+        public function savePedestrian($idVisita, $pedestrian) {
+            $currentVisita = $this->getVisitaInfoById($idVisita);
+            $pedestrianArr = json_decode($pedestrian, true);
+            $pedestrians = array();
+            foreach($pedestrianArr as $pedestrian) {
+                $pedestrianModel = new VisitasPeaton(isset($pedestrian["id"]) ? $pedestrian["id"]: 0, $idVisita, $pedestrian["nombre"], "", "", 1);
+                array_push($pedestrians, $pedestrianModel);
+            }
+            $currentVisita->setPedestrians($pedestrians);
             $res = $this->visitaRepository->updateVisita($currentVisita);
             return $res;
         }
@@ -135,23 +148,15 @@
                 $resPedestriansArr = array();
                 if($resVehicles) {
                     while($rowV = $resVehicles->fetch_array()) {
-                        array_push($resVehiclesArr, array(
-                            "vehicle_id" => $rowV["id"],
-                            "marca" => $rowV["marca"],
-                            "modelo" => $rowV["modelo"],
-                            "anio" => $rowV["anio"],
-                            "placas" => $rowV["placas"],
-                            "color" => $rowV["color"]                                                      
-                        ));
+                        $vehicle = new Vehicle($rowV["id"], $rowV["id_visita"], $rowV["conductor"], $rowV["marca"], $rowV["modelo"], $rowV["anio"], $rowV["placas"], $rowV["color"], $rowV["fecha_registro"], $rowV["fecha_actualizacion"], $rowV["estatus_registro"]);
+                        array_push($resVehiclesArr, $vehicle);
                     }
                 }
 
                 if($resPedestrians) {
                     while($rowP = $resPedestrians->fetch_array()) {
-                        array_push($resPedestriansArr, array(
-                            "pedestrian_id" => $rowP["id"],
-                            "nombre" => $rowP["nombre"]
-                        ));
+                        $pedestrian = new VisitasPeaton($rowP["id"], $rowP["id_visita"], $rowP["nombre"], $rowP["fecha_registro"], $rowP["fecha_actualizacion"], $rowP["estatus_registro"]);
+                        array_push($resPedestriansArr, $pedestrian);
                     }
                 }
 

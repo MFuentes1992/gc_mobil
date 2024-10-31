@@ -5,7 +5,7 @@
         $visitaService = new VisitaService();
         $idVisita = $_POST["idVisita"];
         $vehicles = $_POST["vehicles"];
-        $res = $visitaService->updateVehicles(intval($idVisita), $vehicles);
+        $res = $visitaService->saveVehicle(intval($idVisita), $vehicles);
         if($res) {
             header("HTTP/1.1 200 OK");
             $msg = array("estatus"=> "200", "message"=>"Vehicles created successfully");

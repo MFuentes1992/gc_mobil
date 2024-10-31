@@ -145,7 +145,7 @@
 
                         foreach($visita->getPedestrians() as $pedestrian) {
                             $pedestrianId = $pedestrian->getId();
-                            if(isset($pedestrianId)) {
+                            if(isset($pedestrianId) && $pedestrianId > 0) {
                                 $pedestrianName = $pedestrian->getNombre();
                                 $this->updatePedestrian($pedestrianId, $pedestrianName, 1);
                             } else {
