@@ -29,7 +29,7 @@
             $vehicles = array();
             $pedestrians = array();
             foreach($vehicleArr as $vehicle) {
-                $vehicleModel = new Vehicle(0, 0, $vehicle["driver"], $vehicle["brand"], $vehicle["model"], $vehicle["year"], $vehicle["plates"], $vehicle["color"],"", "", 1);
+                $vehicleModel = new Vehicle(0, 0, $vehicle["conductor"], $vehicle["marca"], $vehicle["modelo"], $vehicle["anio"], $vehicle["placas"], $vehicle["color"],"", "", 1);
                 array_push($vehicles, $vehicleModel);
             }
             foreach($pedestriansArr as $pedestrian) {
@@ -70,7 +70,7 @@
             $vehicles = array();
             $pedestrians = array();
             foreach($vehicleArr as $vehicle) {
-                $vehicleModel = new Vehicle($vehicle["id"], $idVisita, $vehicle["driver"], $vehicle["brand"], $vehicle["model"], $vehicle["year"], $vehicle["plates"], $vehicle["color"],"", "", 1);
+                $vehicleModel = new Vehicle($vehicle["id"], $idVisita, $vehicle["conductor"], $vehicle["marca"], $vehicle["modelo"], $vehicle["anio"], $vehicle["placas"], $vehicle["color"],"", "", 1);
                 array_push($vehicles, $vehicleModel);
             }
             foreach($pedestriansArr as $pedestrian) {
@@ -116,7 +116,7 @@
             $vehicleArr = json_decode($vehicle, true);
             $vehicles = array();
             foreach($vehicleArr as $vehicle) {
-                $vehicleModel = new Vehicle(isset($vehicle["id"]) ? $vehicle["id"]: 0, $idVisita, $vehicle["driver"], $vehicle["brand"], $vehicle["model"], $vehicle["year"], $vehicle["plates"], $vehicle["color"],"", "", 1);
+                $vehicleModel = new Vehicle(isset($vehicle["id"]) ? $vehicle["id"]: 0, $idVisita, $vehicle["conductor"], $vehicle["marca"], $vehicle["modelo"], $vehicle["anio"], $vehicle["placas"], $vehicle["color"],"", "", 1);
                 array_push($vehicles, $vehicleModel);
             }
             $currentVisita->setVehicles($vehicles);

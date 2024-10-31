@@ -10,8 +10,8 @@
         $multiple = $_POST['multiple'];
         $notificaciones = $_POST['notificaciones'];
         $nombreVisita = $_POST['nombreVisita'];
-        $vehicles = $_POST['vehicles']; 
-        $pedestrians = $_POST['pedestrians'];
+        $vehicles = $_POST['vehiculos']; 
+        $pedestrians = $_POST['peatones'];
         $estatusRegistro = $_POST['estatusRegistro'];
         $visitaService = new VisitaService();
         $visita = $visitaService->updateVisita($idVisita, $idTipoVisita, $idTipoIngreso, $fechaIngreso, $fechaSalida, $multiple, $notificaciones, $nombreVisita, $estatusRegistro, $vehicles, $pedestrians);

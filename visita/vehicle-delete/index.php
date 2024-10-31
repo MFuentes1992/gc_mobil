@@ -8,7 +8,7 @@
     $connValues = $session->getSession("userConn");
     $model = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]); 
     
-    $res = $model->deleteVehicle(intval($payload["idVehicle"]));
+    $res = $model->deleteVehicle(intval($payload["id"]));
     if($res) {
         header("HTTP/1.1 200 OK");
         $msg = array("estatus"=> "200", "message"=>"Vehicle removed successfully");

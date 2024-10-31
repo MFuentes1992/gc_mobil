@@ -3,7 +3,7 @@
     session_start();
     if(isset($_POST)) {
         $idVisita = $_POST['idVisita'];
-        $pedestrians = $_POST['pedestrians'];
+        $pedestrians = $_POST['peatones'];
         $visitaService = new VisitaService();
         $res = $visitaService->savePedestrian($idVisita, $pedestrians);
         if($res) {

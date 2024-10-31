@@ -4,7 +4,7 @@
     if(isset($_POST)) {
         $visitaService = new VisitaService();
         $idVisita = $_POST["idVisita"];
-        $vehicles = $_POST["vehicles"];
+        $vehicles = $_POST["vehiculos"];
         $res = $visitaService->saveVehicle(intval($idVisita), $vehicles);
         if($res) {
             header("HTTP/1.1 200 OK");
