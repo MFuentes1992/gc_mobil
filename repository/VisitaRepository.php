@@ -2,6 +2,8 @@
         require_once $_SERVER['DOCUMENT_ROOT']."/db/Connection.php";
         require_once $_SERVER['DOCUMENT_ROOT']."/model/VisitaObjectModel.php";
         require_once $_SERVER['DOCUMENT_ROOT']."/model/VisitaPeatonModel.php";
+        require_once $_SERVER['DOCUMENT_ROOT']."/model/response/VisitaResponse.php";
+        require_once $_SERVER['DOCUMENT_ROOT']."/model/VehicleModel.php";
 
         Class VisitaRepository extends Connection {
             private $table = "visitas";
@@ -37,6 +39,120 @@
                     return $visita;
                 } catch (\Throwable $th) {
                     //throw $th;
+                }
+            }
+
+            public function getVisitaResidencialByQR(string $qr) {
+                try {                
+                    $query = sprintf("SELECT 
+                    v.id as visitaId,
+                    tv.id as idTipoVisita,
+                    ti.id as idTipoIngreso,
+                    u.id as idUsuario,
+                    v.fecha_ingreso as fechaIngreso,
+                    v.fecha_salida as fechaSalida,
+                    v.multiple_entrada as multiple,
+                    v.notificaciones as notificaciones,
+                    v.app_generado as appGenerado,
+                    v.vigencia_qr as vigenciaQR,
+                    v.uniqueID as uniqueId,
+                    u.name as autor,                    
+                    u.email as emailAutor,
+                    i.seccion as residencialSeccion,
+                    i.numero as residencialNumInterior,
+                    r.numero_ext as residencialNumExterior,
+                    r.calle as residencialCalle,
+                    r.colonia as residencialColonia,
+                    r.ciudad as residencialCiudad,
+                    r.estado as residencialEstado,
+                    r.codigo_postal as residencialCP,
+                    r.nombre as residencialNombre,
+                    v.nombre_visita as nombre
+                FROM visitas as v RIGHT JOIN users as u
+                ON v.id_usuario =  u.id
+                JOIN lst_tipo_ingreso_visita as ti 
+                ON v.id_tipo_ingreso = ti.id    
+                JOIN lst_tipo_visita as tv  
+                ON v.id_tipo_visita = tv.id
+                JOIN instalaciones as i
+                ON i.id = v.id_instalacion
+                JOIN recintos as r
+                ON r.id = i.id_recinto
+                WHERE v.uniqueID = '%s'", $qr);                        
+                    $res = $this->execQuery($query);
+                    if($res && $res->num_rows > 0) {
+                        $row = $res->fetch_array();
+                        $visitaResponse = new VisitaResponse(
+                            $row["visitaId"],
+                            $row["idTipoVisita"],
+                            $row["idTipoIngreso"],
+                            $row["idUsuario"],
+                            $row["fechaIngreso"],
+                            $row["fechaSalida"],
+                            $row["multiple"],
+                            $row["notificaciones"],
+                            $row["appGenerado"],
+                            $row["vigenciaQR"],
+                            $row["uniqueId"],
+                            $row["autor"],
+                            $row["emailAutor"],
+                            $row["residencialSeccion"],
+                            $row["residencialNumInterior"],
+                            $row["residencialNumExterior"],
+                            $row["residencialCalle"],
+                            $row["residencialColonia"],
+                            $row["residencialCiudad"],
+                            $row["residencialEstado"],
+                            $row["residencialCP"],
+                            $row["residencialNombre"],
+                            $row["nombre"],
+                            array(),
+                            array()
+                        ); 
+                        
+                        $vehicles = $this->getVehiclesByVisit($row["visitaId"]);
+                        $pedestrians = $this->getPedestriansByVisit($row["visitaId"]);
+                        $vehiclesArray = array();
+                        $pedestriansArray = array();
+                        if($vehicles && $vehicles->num_rows > 0) {
+                            while($row = $vehicles->fetch_array()) {
+                                $vehicle = new Vehicle(
+                                    $row["id"],
+                                    $row["id_visita"],
+                                    $row["conductor"],
+                                    $row["marca"],
+                                    $row["modelo"],
+                                    $row["anio"],
+                                    $row["placas"],
+                                    $row["color"],
+                                    $row["fecha_registro"],
+                                    $row["fecha_actualizacion"],
+                                    $row["estatus_registro"]
+                                );
+                                array_push($vehiclesArray, $vehicle);
+                            }
+                        }
+                        if($pedestrians && $pedestrians->num_rows > 0) {
+                            while($row = $pedestrians->fetch_array()) {
+                                $pedestrian = new VisitasPeaton(
+                                    $row["id"],
+                                    $row["id_visita"],
+                                    $row["nombre"],
+                                    $row["fecha_registro"],
+                                    $row["fecha_actualizacion"],
+                                    $row["estatus_registro"]
+                                );
+                                array_push($pedestriansArray, $pedestrian);
+                            }
+                        }
+                        $visitaResponse->setVehicles($vehiclesArray);
+                        $visitaResponse->setPedestrians($pedestriansArray);
+                        return $visitaResponse;
+                    } else {
+                        return false;
+                    }
+                } catch (\Throwable $th) {
+                    echo $th;
                 }
             }
 
