@@ -14,11 +14,13 @@
         $fechaSalida = $payload["fechaSalida"];
         $multiple = intval($payload["multiple"]);
         $notificaciones = intval($payload["notificaciones"]);
+        $appGenerado = $payload["appGenerado"];
+        $vigenciaQR = 1;
         $nombreVisita = $payload["nombreVisita"];
         $estatusRegistro = 1;
         $vehiculos = isset($payload["vehiculos"]) ? $payload["vehiculos"] : "";
         $peatones = isset($payload["peatones"]) ? $payload["peatones"] : "";
-        $res = $visitaService->createVisita($idUsuario, $idTipoVisita, $idTipoIngreso, $idInstalacion, $fechaIngreso, $fechaSalida, $multiple, $notificaciones, $nombreVisita, $estatusRegistro, $vehiculos, $peatones);   
+        $res = $visitaService->createVisita($idUsuario, $idTipoVisita, $idTipoIngreso, $idInstalacion, $fechaIngreso, $fechaSalida, $multiple, $notificaciones, $appGenerado, $vigenciaQR, $nombreVisita, $estatusRegistro, $vehiculos, $peatones);   
         if($res) {
             header("HTTP/1.1 200 OK");
             $msg = array("estatus"=> "200", "message"=>"Record created successfully", "uniqueID"=>$res);

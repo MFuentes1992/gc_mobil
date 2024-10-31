@@ -21,7 +21,7 @@
         }
 
         public function createVisita(int $idUsuario, int $idTipoVisita, int $idTipoIngreso, int $idInstalacion, string $fechaIngreso, 
-        string $fechaSalida, int $multipleEntrada, int $notificaciones, string $nombreVisita, 
+        string $fechaSalida, int $multipleEntrada, int $notificaciones, int $appGenerado, int $vigenciaQR, string $nombreVisita, 
         int $estatusRegistro, string $vehicles, string $pedestrians) {
             $visitaObjectModel = new VisitaObjectModel();
             $vehicleArr = json_decode($vehicles, true);
@@ -46,8 +46,8 @@
                 $fechaSalida,
                 $multipleEntrada,
                 $notificaciones,
-                1,
-                1,
+                $appGenerado,
+                $vigenciaQR,
                 uniqid('', true),
                 $nombreVisita,
                 "",

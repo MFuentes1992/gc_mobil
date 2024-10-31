@@ -173,10 +173,10 @@
                             
                 $query = sprintf("INSERT INTO `visitas` 
                     (`id_usuario`, `id_tipo_visita`, `id_tipo_ingreso`, `id_instalacion`, `fecha_ingreso`, `fecha_salida`, 
-                    `multiple_entrada`, `notificaciones`, `uniqueID`, `nombre_visita`, `fecha_registro`, `fecha_actualizacion` ,`estatus_registro`) 
-                    VALUES (%d, %d, %d, %d, '%s', '%s', %d, %d, '%s', '%s', '%s', '%s', %d)", 
+                    `multiple_entrada`, `notificaciones`, `app_generado`, `vigencia_qr`, `uniqueID`, `nombre_visita`, `fecha_registro`, `fecha_actualizacion` ,`estatus_registro`) 
+                    VALUES (%d, %d, %d, %d, '%s', '%s', %d, %d, %d, %d,'%s', '%s', '%s', '%s', %d)", 
                     $visita->getIdUsuario(), $visita->getIdTipoVisita(), $visita->getIdTipoIngreso(), $visita->getIdInstalacion(), $visita->getFechaIngreso(), $visita->getFechaSalida(), $visita->getMultipleEntrada(),
-                    $visita->getNotificaciones(), $visita->getUniqueID(), $visita->getNombreVisita(), date("Y-m-d H:i:s"), date("Y-m-d H:i:s"), $visita->getEstatusRegistro());            
+                    $visita->getNotificaciones(), $visita->getAppGenerado(), $visita->getVigenciaQR(), $visita->getUniqueID(), $visita->getNombreVisita(), date("Y-m-d H:i:s"), date("Y-m-d H:i:s"), $visita->getEstatusRegistro());            
                 $res = $this->execQuery($query);
                     if($res) {
                         $lastId = $this->getConnection()->insert_id;                                                          
