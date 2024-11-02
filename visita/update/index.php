@@ -14,7 +14,7 @@
         $pedestrians = $_POST['peatones'];
         $estatusRegistro = $_POST['estatusRegistro'];
         $visitaService = new VisitaService();
-        $visita = $visitaService->updateVisita($idVisita, $idTipoVisita, $idTipoIngreso, $fechaIngreso, $fechaSalida, $multiple, $notificaciones, $nombreVisita, $estatusRegistro, $vehicles, $pedestrians);
+        $visita = $visitaService->updateVisita($idVisita, $idTipoVisita, $idTipoIngreso, $fechaIngreso, $fechaSalida, $multiple, $notificaciones, $nombreVisita, isset($estatusRegistro) ? $estatusRegistro :  1, $vehicles, $pedestrians);
         if($visita) {
             header("HTTP/1.1 200 OK");
             $msg = array("estatus"=> "200", "message"=>"La visita se actualizo correctamente");
