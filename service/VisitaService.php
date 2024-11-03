@@ -10,6 +10,7 @@
         private $bitacoraRepository;
         private $visitaRepository;
         private $vehicleRepository;
+        private $visitaPeatonRepository;
 
         function __construct() {
             $session = new SessionManager();
@@ -17,6 +18,7 @@
             $this->bitacoraRepository = new BitacoraRepository($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
             $this->visitaRepository = new VisitaRepository($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
             $this->vehicleRepository = new VehicleRepository($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
+            $this->visitaPeatonRepository = new VisitaPeatonRepository($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
         }
 
         public function createVisita(int $idUsuario, int $idTipoVisita, int $idTipoIngreso, int $idInstalacion, string $fechaIngreso, 
@@ -74,7 +76,8 @@
                 array_push($vehicles, $vehicleModel);
             }
             foreach($pedestriansArr as $pedestrian) {
-                $pedestrianModel = new VisitasPeaton($pedestrian["id"], $idVisita, $pedestrian["nombre"], "", "", 1);
+                $existingPedestrian = $this->visitaPeatonRepository->getVisitaPeatonById($pedestrian["id"]);                
+                $pedestrianModel = new VisitasPeaton($existingPedestrian == null ? 0 : $pedestrian["id"], $idVisita, $pedestrian["nombre"], "", "", 1);
                 array_push($pedestrians, $pedestrianModel);
             }
             $currentVisita->setVehicles($vehicles);
