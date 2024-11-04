@@ -78,7 +78,7 @@
                 ON i.id = v.id_instalacion
                 JOIN recintos as r
                 ON r.id = i.id_recinto
-                WHERE v.uniqueID = '%s' AND estatus_registro = 1", $qr);                        
+                WHERE v.uniqueID = '%s' AND v.estatus_registro = 1", $qr);                        
                     $res = $this->execQuery($query);
                     if($res && $res->num_rows > 0) {
                         $row = $res->fetch_array();
@@ -368,7 +368,7 @@
 
             public function getVehiclesByVisit(int $idVisita) {
                 try {
-                    $query = sprintf("SELECT * FROM `visitas_vehiculos` WHERE `id_visita` = %d AND estatus_registro = 1", $idVisita);
+                    $query = sprintf("SELECT * FROM `visitas_vehiculos` WHERE `id_visita` = %d AND `estatus_registro` = 1", $idVisita);
                     return $this->execQuery($query);
                 } catch (\Throwable $th) {
                     echo $th;
@@ -377,7 +377,7 @@
 
             public function getPedestriansByVisit(int $idVisita) {
                 try {
-                    $query = sprintf("SELECT * FROM `visitas_peatones` WHERE `id_visita` = %d AND estatus_registro = 1", $idVisita);
+                    $query = sprintf("SELECT * FROM `visitas_peatones` WHERE `id_visita` = %d AND `estatus_registro` = 1", $idVisita);
                     return $this->execQuery($query);
                 } catch (\Throwable $th) {
                     echo $th;
