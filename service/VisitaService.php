@@ -74,12 +74,12 @@
             $pedestrians = array();
             foreach($vehicleArr as $vehicle) {
                 $existingVehicle = $this->vehicleRepository->getVehicleById($vehicle["id"]);                
-                $vehicleModel = new Vehicle($existingVehicle == null ? 0 : $existingVehicle->getId(), $idVisita, $vehicle["conductor"], $vehicle["marca"], $vehicle["modelo"], $vehicle["anio"], $vehicle["placas"], $vehicle["color"],"", "", 1);
+                $vehicleModel = new Vehicle($existingVehicle == null ? 0 : $existingVehicle->getId(), $idVisita, $vehicle["conductor"], $vehicle["marca"], $vehicle["modelo"], $vehicle["anio"], $vehicle["placas"], $vehicle["color"],"", "", $vehicle["estatusRegistro"]);
                 array_push($vehicles, $vehicleModel);
             }
             foreach($pedestriansArr as $pedestrian) {
                 $existingPedestrian = $this->visitaPeatonRepository->getVisitaPeatonById($pedestrian["id"]);                
-                $pedestrianModel = new VisitasPeaton($existingPedestrian == null ? 0 : $pedestrian["id"], $idVisita, $pedestrian["nombre"], "", "", 1);
+                $pedestrianModel = new VisitasPeaton($existingPedestrian == null ? 0 : $pedestrian["id"], $idVisita, $pedestrian["nombre"], "", "", $pedestrian["estatusRegistro"]);
                 array_push($pedestrians, $pedestrianModel);
             }
             $currentVisita->setVehicles($vehicles);
@@ -139,6 +139,16 @@
             }
             $currentVisita->setPedestrians($pedestrians);
             $res = $this->visitaRepository->updateVisita($currentVisita);
+            return $res;
+        }
+
+        public function deleteVehicle(int $idVehicle) {
+            $res = $this->vehicleRepository->deleteVehicle($idVehicle);
+            return $res;
+        }
+
+        public function deletePedestrian(int $idPedestrian) {
+            $res = $this->visitaPeatonRepository->deleteVisitaPeaton($idPedestrian);
             return $res;
         }
 

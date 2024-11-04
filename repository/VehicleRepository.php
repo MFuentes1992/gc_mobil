@@ -17,5 +17,11 @@
             $vehicle = new Vehicle($vehicleRow['id'], $vehicleRow['id_visita'], $vehicleRow['conductor'], $vehicleRow['marca'], $vehicleRow['modelo'], $vehicleRow['anio'], $vehicleRow['placas'], $vehicleRow['color'], $vehicleRow['fecha_registro'], $vehicleRow['fecha_actualizacion'],$vehicleRow['estatus_registro']);            
             return $vehicle;
         }
+
+        public function deleteVehicle($id) {
+            $query = "UPDATE $this->table SET `estatus_registro` = 0 WHERE id = $id";
+            $result = $this->execQuery($query);
+            return $result;
+        }
     }
 ?>

@@ -19,5 +19,11 @@ Class VisitaPeatonRepository extends Connection {
         $visitaPeaton = new VisitasPeaton($visitaPeatonRow['id'], $visitaPeatonRow['id_visita'], $visitaPeatonRow['nombre'], $visitaPeatonRow['fecha_registro'], $visitaPeatonRow['fecha_actualizacion'],$visitaPeatonRow['estatus_registro']);            
         return $visitaPeaton;
     }
+
+    public function deleteVisitaPeaton($id) {
+        $query = "UPDATE $this->table SET `estatus_registro` = 0 WHERE id = $id";
+        $result = $this->execQuery($query);
+        return $result;
+    }
 }
 ?>
