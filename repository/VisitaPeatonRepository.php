@@ -11,11 +11,11 @@ Class VisitaPeatonRepository extends Connection {
 
     public function getVisitaPeatonById($id) {
         $query = "SELECT * FROM $this->table WHERE id = $id";
-        $result = $this->execQuery($query);             
-        $visitaPeatonRow = $result->fetch_assoc();
-        if($visitaPeatonRow == null) {
+        $result = $this->execQuery($query);                     
+        if(!$result) {
             return null;
         }
+        $visitaPeatonRow = $result->fetch_assoc();
         $visitaPeaton = new VisitasPeaton($visitaPeatonRow['id'], $visitaPeatonRow['id_visita'], $visitaPeatonRow['nombre'], $visitaPeatonRow['fecha_registro'], $visitaPeatonRow['fecha_actualizacion'],$visitaPeatonRow['estatus_registro']);            
         return $visitaPeaton;
     }

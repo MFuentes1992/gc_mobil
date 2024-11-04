@@ -3,7 +3,9 @@
     require_once $_SERVER['DOCUMENT_ROOT']."/model/VisitaObjectModel.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/repository/BitacoraRepository.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/repository/VisitaRepository.php";
-    require_once $_SERVER['DOCUMENT_ROOT']."/model/Vehicle.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/repository/VisitaPeatonRepository.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/repository/VehicleRepository.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/model/VehicleModel.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/sessionManager/SessionManager.php";
     
     Class VisitaService {
