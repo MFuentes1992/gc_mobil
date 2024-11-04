@@ -121,7 +121,7 @@
 
         public function deleteVehicle(int $idVehicle) {
             try {
-                $query = sprintf("DELETE FROM `visitas_vehiculos` WHERE `id` = %d", $idVehicle);
+                $query = sprintf("DELETE FROM `visitas_vehiculos` WHERE `id` = %d", $idVehicle);                
                 return $this->execQuery($query);
             } catch (\Throwable $th) {
                 echo $th;

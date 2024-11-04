@@ -1,23 +1,26 @@
 <?php 
     require_once $_SERVER['DOCUMENT_ROOT']."/model/BitacoraModel.php";
-    require_once $_SERVER['DOCUMENT_ROOT']."/model/VisitaModel.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/model/VisitaObjectModel.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/repository/BitacoraRepository.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/repository/VisitaRepository.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/repository/VisitaPeatonRepository.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/repository/VehicleRepository.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/model/VehicleModel.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/sessionManager/SessionManager.php";
     
     Class VisitaService {
         private $bitacoraRepository;
         private $visitaRepository;
-        private $visitaModel;
+        private $vehicleRepository;
+        private $visitaPeatonRepository;
 
         function __construct() {
             $session = new SessionManager();
             $connValues = $session->getSession("userConn");
             $this->bitacoraRepository = new BitacoraRepository($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
             $this->visitaRepository = new VisitaRepository($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
-
-            $this->visitaModel = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
+            $this->vehicleRepository = new VehicleRepository($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
+            $this->visitaPeatonRepository = new VisitaPeatonRepository($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
         }
 
         public function createVisita(int $idUsuario, int $idTipoVisita, int $idTipoIngreso, int $idInstalacion, string $fechaIngreso, 
@@ -70,11 +73,13 @@
             $vehicles = array();
             $pedestrians = array();
             foreach($vehicleArr as $vehicle) {
-                $vehicleModel = new Vehicle($vehicle["id"], $idVisita, $vehicle["conductor"], $vehicle["marca"], $vehicle["modelo"], $vehicle["anio"], $vehicle["placas"], $vehicle["color"],"", "", 1);
+                $existingVehicle = $this->vehicleRepository->getVehicleById($vehicle["id"]);                
+                $vehicleModel = new Vehicle($existingVehicle == null ? 0 : $existingVehicle->getId(), $idVisita, $vehicle["conductor"], $vehicle["marca"], $vehicle["modelo"], $vehicle["anio"], $vehicle["placas"], $vehicle["color"],"", "", $vehicle["estatusRegistro"]);
                 array_push($vehicles, $vehicleModel);
             }
             foreach($pedestriansArr as $pedestrian) {
-                $pedestrianModel = new VisitasPeaton($pedestrian["id"], $idVisita, $pedestrian["nombre"], "", "", 1);
+                $existingPedestrian = $this->visitaPeatonRepository->getVisitaPeatonById($pedestrian["id"]);                
+                $pedestrianModel = new VisitasPeaton($existingPedestrian == null ? 0 : $pedestrian["id"], $idVisita, $pedestrian["nombre"], "", "", $pedestrian["estatusRegistro"]);
                 array_push($pedestrians, $pedestrianModel);
             }
             $currentVisita->setVehicles($vehicles);
@@ -134,6 +139,16 @@
             }
             $currentVisita->setPedestrians($pedestrians);
             $res = $this->visitaRepository->updateVisita($currentVisita);
+            return $res;
+        }
+
+        public function deleteVehicle(int $idVehicle) {
+            $res = $this->vehicleRepository->deleteVehicle($idVehicle);
+            return $res;
+        }
+
+        public function deletePedestrian(int $idPedestrian) {
+            $res = $this->visitaPeatonRepository->deleteVisitaPeaton($idPedestrian);
             return $res;
         }
 

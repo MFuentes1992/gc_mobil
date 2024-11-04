@@ -1,14 +1,9 @@
 <?php
-    require_once $_SERVER['DOCUMENT_ROOT']."/model/VisitaModel.php";
-    require_once $_SERVER['DOCUMENT_ROOT']."/constants/constants.php";
-    require_once $_SERVER['DOCUMENT_ROOT']."/sessionManager/SessionManager.php"; 
+    require_once $_SERVER['DOCUMENT_ROOT']."/service/VisitaService.php";
     session_start();
     $payload = $_POST;
-    $session = new SessionManager();
-    $connValues = $session->getSession("userConn");
-    $model = new Visit($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]); 
-    
-    $res = $model->deleteVehicle(intval($payload["id"]));
+    $service = new VisitaService();    
+    $res = $service->deleteVehicle(intval($payload["id"]));
     if($res) {
         header("HTTP/1.1 200 OK");
         $msg = array("estatus"=> "200", "message"=>"Vehicle removed successfully");
