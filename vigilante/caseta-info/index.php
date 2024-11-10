@@ -15,6 +15,7 @@
             $resArr = array();
             while($row = $res->fetch_array()) {
                 array_push($resArr, array("residenceMobile" => $row["numero_celular"], 
+                "residenceId"=> $row["id_recinto"],
                 "residencePhone" => $row["numero_telefono"], 
                 "residenceExt" => $row["extension_telefono"], 
                 "residenceName" => $row["nombre"], 
