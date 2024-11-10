@@ -273,6 +273,7 @@
                 "residencialCP" => $visitaResponse->getResidencialCP(),
                 "residencialNombre" => $visitaResponse->getResidencialNombre(),
                 "nombre" => $visitaResponse->getNombre(),
+                "estatusVisita" => $visitaResponse->getEstatusVisita(),
                 "vehicles" => $vehiclesArr,
                 "pedestrians" => $pedestriansArr
             );
