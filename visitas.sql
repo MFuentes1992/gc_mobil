@@ -286,3 +286,32 @@ ON c.id_recinto = r.id
 LEFT JOIN codigos_vigilancia as cv
 ON c.id = cv.id_caseta
 WHERE cv.codigo_activacion = "UGG3IRXE5E" AND c.estatus_registro = 1 AND r.estatus_registro = 1
+
+# --- GET Instalaciones - user data by recinto and active status
+SELECT 
+	i.id as idInstalacion,
+    i.seccion,
+    i.numero as numInt,
+    usersInfo.id as idUsuario,
+    usersInfo.name as owner
+FROM instalaciones as i
+INNER JOIN 
+(
+SELECT
+  users.id,
+  users.id_profile,
+  SUBSTRING_INDEX(SUBSTRING_INDEX(users.id_instalacion, ',', numbers.n), ',', -1) idInstalacion,
+  users.name,
+  users.email,
+  users.status
+FROM
+  (SELECT 1 n UNION ALL SELECT 2
+   UNION ALL SELECT 3 UNION ALL SELECT 4) numbers INNER JOIN users
+  ON CHAR_LENGTH(users.id_instalacion)
+     -CHAR_LENGTH(REPLACE(users.id_instalacion, ',', ''))>=numbers.n-1
+ORDER BY
+  id, n
+) usersInfo
+ON i.id = usersInfo.idInstalacion
+WHERE i.id_recinto = 1 and usersInfo.status = 1 AND i.estatus_registro = 1
+    
