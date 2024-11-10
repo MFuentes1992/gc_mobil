@@ -67,7 +67,8 @@
                     r.estado as residencialEstado,
                     r.codigo_postal as residencialCP,
                     r.nombre as residencialNombre,
-                    v.nombre_visita as nombre
+                    v.nombre_visita as nombre,
+                    v.estatus_registro as estatusRegistro
                 FROM visitas as v RIGHT JOIN users as u
                 ON v.id_usuario =  u.id
                 JOIN lst_tipo_ingreso_visita as ti 
@@ -78,7 +79,7 @@
                 ON i.id = v.id_instalacion
                 JOIN recintos as r
                 ON r.id = i.id_recinto
-                WHERE v.uniqueID = '%s' AND v.estatus_registro = 1", $qr);                        
+                WHERE v.uniqueID = '%s'", $qr);                        
                     $res = $this->execQuery($query);
                     if($res && $res->num_rows > 0) {
                         $row = $res->fetch_array();
@@ -107,7 +108,8 @@
                             $row["residencialNombre"],
                             $row["nombre"],
                             array(),
-                            array()
+                            array(),
+                            $row["estatusRegistro"]
                         ); 
                         
                         $vehicles = $this->getVehiclesByVisit($row["visitaId"]);

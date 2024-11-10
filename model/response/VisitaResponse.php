@@ -23,10 +23,11 @@
         private $residencialCP;
         private $residencialNombre;
         private $nombre;
+        private $estatusVisita;
         private $vehicles;
         private $pedestrians;
 
-        public function __construct($visitaId, $idTipoVisita, $idTipoIngreso, $idUsuario, $fechaIngreso, $fechaSalida, $multiple, $notificaciones, $appGenerado, $vigenciaQR, $uniqueId, $autor, $emailAutor, $residencialSeccion, $residencialNumInterior, $residencialNumExterior, $residencialCalle, $residencialColonia, $residencialCiudad, $residencialEstado, $residencialCP, $residencialNombre, $nombre, $vehicles, $pedestrians) {
+        public function __construct($visitaId, $idTipoVisita, $idTipoIngreso, $idUsuario, $fechaIngreso, $fechaSalida, $multiple, $notificaciones, $appGenerado, $vigenciaQR, $uniqueId, $autor, $emailAutor, $residencialSeccion, $residencialNumInterior, $residencialNumExterior, $residencialCalle, $residencialColonia, $residencialCiudad, $residencialEstado, $residencialCP, $residencialNombre, $nombre, $vehicles, $pedestrians, $estatusVisita) {
             $this->visitaId = $visitaId;
             $this->idTipoVisita = $idTipoVisita;
             $this->idTipoIngreso = $idTipoIngreso;
@@ -52,6 +53,7 @@
             $this->nombre = $nombre;
             $this->vehicles = $vehicles;
             $this->pedestrians = $pedestrians;
+            $this->estatusVisita = $estatusVisita;
         }
 
         public function getVisitaId() {
@@ -154,6 +156,10 @@
             return $this->pedestrians;
         }
 
+        public function getEstatusVisita() {
+            return $this->estatusVisita;
+        }
+
         public function setVisitaId($visitaId) {
             $this->visitaId = $visitaId;
         }
@@ -254,8 +260,12 @@
             $this->pedestrians = $pedestrians;
         }
 
+        public function setEstatusVisita($estatusVisita) {
+            $this->estatusVisita = $estatusVisita;
+        }
+
         public function toString() {
-            return "VisitaResponse [visitaId=" . $this->visitaId . ", idTipoVisita=" . $this->idTipoVisita . ", idTipoIngreso=" . $this->idTipoIngreso . ", idUsuario=" . $this->idUsuario . ", fechaIngreso=" . $this->fechaIngreso . ", fechaSalida=" . $this->fechaSalida . ", multiple=" . $this->multiple . ", notificaciones=" . $this->notificaciones . ", appGenerado=" . $this->appGenerado . ", vigenciaQR=" . $this->vigenciaQR . ", uniqueId=" . $this->uniqueId . ", autor=" . $this->autor . ", emailAutor=" . $this->emailAutor . ", resindecialSeccion=" . $this->residencialSeccion . ", residencialNumInterior=" . $this->residencialNumInterior . ", residencialNumExterior=" . $this->residencialNumExterior . ", residencialCalle=" . $this->residencialCalle . ", residencialColonia=" . $this->residencialColonia . ",residencialCiudad=" . $this->residencialCiudad   . ", residencialEstado=" . $this->residencialEstado . ", residencialCP=" . $this->residencialCP . ", residencialNombre=" . $this->residencialNombre . ", nombre=" . $this->nombre . ", vehicles=" . $this->vehicles . ", pedestrians=" . $this->pedestrians . "]";
+            return "VisitaResponse [visitaId=" . $this->visitaId . ", idTipoVisita=" . $this->idTipoVisita . ", idTipoIngreso=" . $this->idTipoIngreso . ", idUsuario=" . $this->idUsuario . ", fechaIngreso=" . $this->fechaIngreso . ", fechaSalida=" . $this->fechaSalida . ", multiple=" . $this->multiple . ", notificaciones=" . $this->notificaciones . ", appGenerado=" . $this->appGenerado . ", vigenciaQR=" . $this->vigenciaQR . ", uniqueId=" . $this->uniqueId . ", autor=" . $this->autor . ", emailAutor=" . $this->emailAutor . ", resindecialSeccion=" . $this->residencialSeccion . ", residencialNumInterior=" . $this->residencialNumInterior . ", residencialNumExterior=" . $this->residencialNumExterior . ", residencialCalle=" . $this->residencialCalle . ", residencialColonia=" . $this->residencialColonia . ",residencialCiudad=" . $this->residencialCiudad   . ", residencialEstado=" . $this->residencialEstado . ", residencialCP=" . $this->residencialCP . ", residencialNombre=" . $this->residencialNombre . ", nombre=" . $this->nombre . ", vehicles=" . $this->vehicles . ", pedestrians=" . $this->pedestrians . " , estatusVisita=" . $this->estatusVisita . "]";   
         }
 
     }
