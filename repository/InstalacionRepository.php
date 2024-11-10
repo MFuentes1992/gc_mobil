@@ -34,7 +34,7 @@
                         id, n
                         ) usersInfo
                 ON i.id = usersInfo.idInstalacion
-                WHERE i.id_recinto = %d and usersInfo.status = 1 AND i.estatus_registro = 1 ", $this->table, $recintoId);
+                WHERE i.id_recinto = %d AND usersInfo.status = 1 AND i.estatus_registro = 1 AND usersInfo.id_profile in (2,3) ", $this->table, $recintoId);
                 $raw = $this->execQuery($query);
                 $response = array();
                 if ($raw->num_rows > 0) {
