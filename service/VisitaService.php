@@ -222,7 +222,7 @@
             $visitaResponse = $this->visitaRepository->getVisitaResidencialByQR($qr);            
             $bitacoraRes = $this->bitacoraRepository->selectFromWithVisitaId($visitaResponse->getVisitaId());
             if($bitacoraRes) {
-                if(strcmp($bitacoraRes->getTipoRegistro(), "entrada") == 0 && $visitaResponse->getVigenciaQR() == 1) {
+                if(strcmp($bitacoraRes->getTipoRegistro(), "entrada") == 0 && $visitaResponse->getVigenciaQR() == 1 && $visitaResponse->getEstatusVisita() == 1) {
                     $visitaResponse->setEstatusVisita("Registrada");
                 } else {
                     $visitaResponse->setEstatusVisita(
