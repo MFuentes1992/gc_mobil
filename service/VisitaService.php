@@ -219,7 +219,18 @@
         }
 
         public function getVisitByQR(string $qr) {
-            $visitaResponse = $this->visitaRepository->getVisitaResidencialByQR($qr);
+            $visitaResponse = $this->visitaRepository->getVisitaResidencialByQR($qr);            
+            $bitacoraRes = $this->bitacoraRepository->selectFromWithVisitaId($visitaResponse->getVisitaId());
+            if($bitacoraRes) {
+                if(strcmp($bitacoraRes->getTipoRegistro(), "entrada") == 0 && $visitaResponse->getVigenciaQR() == 1) {
+                    $visitaResponse->setEstatusVisita("Registrada");
+                } else {
+                    $visitaResponse->setEstatusVisita(
+                        $visitaResponse->getEstatusVisita() == 1 && $visitaResponse->getVigenciaQR() == 1 
+                        ? "Activa" : "Inactiva");
+                }
+            }
+
             $vehiclesArr = array();
             foreach($visitaResponse->getVehicles() as $vehicle) {
                 $vehicleArr = array(
