@@ -179,7 +179,7 @@
                     VALUES (%d, %d, %d, %d, '%s', '%s', %d, %d, %d, %d,'%s', '%s', '%s', '%s', %d)", 
                     $visita->getIdUsuario(), $visita->getIdTipoVisita(), $visita->getIdTipoIngreso(), $visita->getIdInstalacion(), $visita->getFechaIngreso(), $visita->getFechaSalida(), $visita->getMultipleEntrada(),
                     $visita->getNotificaciones(), $visita->getAppGenerado(), $visita->getVigenciaQR(), $visita->getUniqueID(), $visita->getNombreVisita(), date("Y-m-d H:i:s"), date("Y-m-d H:i:s"), $visita->getEstatusRegistro());            
-                $res = $this->execQuery($query);
+                    $res = $this->execQuery($query);
                     if($res) {
                         $lastId = $this->getConnection()->insert_id;                                                          
                         foreach($visita->getVehicles() as $vehicle) {                             
