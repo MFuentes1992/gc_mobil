@@ -32,8 +32,7 @@
             $msg = array("message"=>"Please provide the customer code you would like to autenticate.");
             echo json_encode($msg);
         }
-    }  else {
-        $requestUrl = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+    }  else {        
         $requestString = substr($requestUrl, strlen($baseUrl));        
         switch ($requestString) {
             case '/?login':                                
