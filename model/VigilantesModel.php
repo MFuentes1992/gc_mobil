@@ -18,7 +18,6 @@
                 FROM codigos_vigilancia as cv LEFT JOIN info_caseta_vigilancia as c
                 ON cv.id_caseta = c.id
                 WHERE codigo_activacion = '%s' AND cv.estatus_registro = 1", $code);
-                echo $query;
                 $res = $this->execQuery($query);
                 return $res;
             } catch (\Throwable $th) {
