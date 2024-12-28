@@ -46,6 +46,7 @@
                 $log->setFechaLectura(date("Y-m-d H:i:s", strtotime($log->getFechaLectura())));
                 array_push($arrayRes,array(
                     "id_visita" => $log->getIdVisita(),
+                    "uniqueID" => $log->getUniqueID(),
                     "id_bitacora" => $log->getIdBitacora(),
                     "id_instalacion" => $log->getIdInstalacion(),
                     "id_tipo_visita" => $log->getIdTipoVisita(),

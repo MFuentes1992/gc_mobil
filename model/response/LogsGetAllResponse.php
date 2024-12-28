@@ -1,6 +1,7 @@
 <?php 
     Class LogsGetAllResponse {
         private $idVisita;
+        private $uniqueID;
         private $idBitacora;
         private $idInstalacion;
         private $idTipoVisita;
@@ -12,8 +13,9 @@
         private $nombreVisita;
         private $fechaLectura;
 
-        public function __construct($idVisita, $idBitacora, $idInstalacion, $seccion, $numero, $nombreVisita, $fechaLectura, $idTipoVisita, $idTipoIngreso, $tipoVisita, $tipoIngreso) {
+        public function __construct($idVisita, $uniqueID, $idBitacora, $idInstalacion, $seccion, $numero, $nombreVisita, $fechaLectura, $idTipoVisita, $idTipoIngreso, $tipoVisita, $tipoIngreso) {
             $this->idVisita = $idVisita;
+            $this->uniqueID = $uniqueID;
             $this->idBitacora = $idBitacora;
             $this->idInstalacion = $idInstalacion;
             $this->seccion = $seccion;
@@ -29,6 +31,10 @@
 
         public function getIdVisita() {
             return $this->idVisita;
+        }
+
+        public function getUniqueID() {
+            return $this->uniqueID;
         }
 
         public function setIdVisita($idVisita) {
@@ -91,6 +97,10 @@
             $this->idTipoVisita = $idTipoVisita;
         }
 
+        public function setUniqueID($uniqueID) {
+            $this->uniqueID = $uniqueID;
+        }
+
         public function getIdTipoIngreso() {
             return $this->idTipoIngreso;
         }
@@ -120,7 +130,7 @@
 
             return "LogsGetAll [idVisita=" . 
             $this->idVisita . 
-            ", idBitacora=" . $this->idBitacora . ", idInstalacion=" . $this->idInstalacion . ", seccion=" . $this->seccion . ", numero=" . $this->numero . ", nombreVisita=" . $this->nombreVisita . ", fechaLectura=" . $this->fechaLectura .  "". "]";
+            ", idBitacora=" . $this->idBitacora . ", uniqueID=". $this->uniqueID . ", idInstalacion=" . $this->idInstalacion . ", seccion=" . $this->seccion . ", numero=" . $this->numero . ", nombreVisita=" . $this->nombreVisita . ", fechaLectura=" . $this->fechaLectura .  "". "]";
         }
     }
 

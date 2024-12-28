@@ -32,6 +32,7 @@
             try {
                 $query = sprintf("SELECT DISTINCT
                     v.id as id_visita,
+                    v.uniqueID,
                     b.id as id_bitacora,
                     i.id as id_instalacion,
                     v.id_tipo_visita,
@@ -58,7 +59,7 @@
                 $logs = array();
                 if($resQuery && $resQuery->num_rows > 0) {
                     while($row = $resQuery->fetch_array()) {
-                        $log = new LogsGetAllResponse($row["id_visita"], $row["id_bitacora"], $row["id_instalacion"], $row["seccion"], $row["numero"], $row["nombre_visita"], $row["fecha_lectura"], $row["id_tipo_visita"], $row["id_tipo_ingreso"], $row["tipo_visita"], $row["tipo_ingreso"]);
+                        $log = new LogsGetAllResponse($row["id_visita"], $row["uniqueID"],$row["id_bitacora"], $row["id_instalacion"], $row["seccion"], $row["numero"], $row["nombre_visita"], $row["fecha_lectura"], $row["id_tipo_visita"], $row["id_tipo_ingreso"], $row["tipo_visita"], $row["tipo_ingreso"]);
                         array_push($logs, $log);
                     }
                 }
@@ -74,6 +75,7 @@
                 $query = "
                     SELECT 
                     v.id as id_visita, 
+                    v.uniqueID,
                     b.id as id_bitacora, 
                     i.id as id_instalacion, 
                     v.id_tipo_visita,
@@ -106,7 +108,7 @@
                 $logs = array();
                 if($resQuery && $resQuery->num_rows > 0) {
                     while($row = $resQuery->fetch_array()) {
-                        $log = new LogsGetAllResponse($row["id_visita"], $row["id_bitacora"], $row["id_instalacion"], $row["seccion"], $row["numero"], $row["nombre_visita"], $row["fecha_lectura"], $row["id_tipo_visita"], $row["id_tipo_ingreso"], $row["tipo_visita"], $row["tipo_ingreso"]);
+                        $log = new LogsGetAllResponse($row["id_visita"], $row["uniqueID"],$row["id_bitacora"], $row["id_instalacion"], $row["seccion"], $row["numero"], $row["nombre_visita"], $row["fecha_lectura"], $row["id_tipo_visita"], $row["id_tipo_ingreso"], $row["tipo_visita"], $row["tipo_ingreso"]);
                         array_push($logs, $log);
                     }
                 }
