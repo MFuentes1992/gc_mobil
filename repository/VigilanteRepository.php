@@ -8,6 +8,26 @@
             parent::__construct($dbUrl, $dbUser, $dbPass, $dbName);
         }
 
+        public function getLogsByVisitaId(int $visitaId) {
+            try {
+                $query = sprintf("SELECT bv.tipo_registro, bv.fecha_lectura FROM bitacora_visita bv WHERE bv.id_visita = %d", $visitaId);
+                $resQuery = $this->execQuery($query);
+                $logs = array();
+                if($resQuery && $resQuery->num_rows > 0) {
+                    while($row = $resQuery->fetch_array()) {
+                        
+                        array_push($logs, array(
+                            "tipo_registro" => $row["tipo_registro"],
+                            "fecha_lectura" => $row["fecha_lectura"]
+                        ));
+                    }
+                }
+                return $logs;
+            } catch (\Throwable $th) {            
+                echo $th;
+            }
+        }
+
         public function getAllRegisteredLogsByCasetaId(int $casetaId) {
             try {
                 $query = sprintf("SELECT DISTINCT
