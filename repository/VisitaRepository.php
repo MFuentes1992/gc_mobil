@@ -385,6 +385,27 @@
                     echo $th;
                 }
             }
+
+            public function saveImageUrl(int $idVehiclePedestrian, string $tipoEvidencia, $url) {
+                try {
+                    $query = sprintf("INSERT INTO `visitas_evidencia` (`tipo_evidencia`, `id_vehiculo_peaton`, `archivo`, `fecha_registro`, `fecha_actualizacion`, `estatus_registro`) VALUES('%s', %d, '%s', NOW(), NOW(), 1)", $tipoEvidencia, $idVehiclePedestrian, $url);                    
+                    return $this->execQuery($query);
+                } catch (\Throwable $th) {
+                    echo $th;
+                }
+            }
+
+            /**
+             * Id: primary key of the visitas_evidencia record
+             */
+            public function removeImageUrl(int $id) {
+                try {
+                    $query = sprintf("DELETE FROM `visitas_evidencia` WHERE `id` = %d", $id);
+                    return $this->execQuery($query);
+                } catch (\Throwable $th) {
+                    echo $th;
+                }
+            }
         }
 
 ?>

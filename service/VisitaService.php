@@ -290,5 +290,20 @@
             );
             return $resArr;
         }
+
+        public function saveImageAttached($imagesUrls) {
+            $resCounter = 0;
+            foreach($imagesUrls as $imageUrl) {
+                $res = $this->visitaRepository->saveImageUrl($imageUrl->getIdVehiculoPedestrian(), $imageUrl->getTipoEvidencia(), $imageUrl->getUrl());
+                if($res) {
+                    $resCounter++;
+                }
+            }
+            if($resCounter == sizeof($imagesUrls)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 ?>
