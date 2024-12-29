@@ -8,10 +8,31 @@
             parent::__construct($dbUrl, $dbUser, $dbPass, $dbName);
         }
 
+        public function getLogsByVisitaId(int $visitaId) {
+            try {
+                $query = sprintf("SELECT bv.tipo_registro, bv.fecha_lectura FROM bitacora_visita bv WHERE bv.id_visita = %d", $visitaId);
+                $resQuery = $this->execQuery($query);
+                $logs = array();
+                if($resQuery && $resQuery->num_rows > 0) {
+                    while($row = $resQuery->fetch_array()) {
+                        
+                        array_push($logs, array(
+                            "tipo_registro" => $row["tipo_registro"],
+                            "fecha_lectura" => $row["fecha_lectura"]
+                        ));
+                    }
+                }
+                return $logs;
+            } catch (\Throwable $th) {            
+                echo $th;
+            }
+        }
+
         public function getAllRegisteredLogsByCasetaId(int $casetaId) {
             try {
                 $query = sprintf("SELECT DISTINCT
                     v.id as id_visita,
+                    v.uniqueID,
                     b.id as id_bitacora,
                     i.id as id_instalacion,
                     v.id_tipo_visita,
@@ -38,7 +59,7 @@
                 $logs = array();
                 if($resQuery && $resQuery->num_rows > 0) {
                     while($row = $resQuery->fetch_array()) {
-                        $log = new LogsGetAllResponse($row["id_visita"], $row["id_bitacora"], $row["id_instalacion"], $row["seccion"], $row["numero"], $row["nombre_visita"], $row["fecha_lectura"], $row["id_tipo_visita"], $row["id_tipo_ingreso"], $row["tipo_visita"], $row["tipo_ingreso"]);
+                        $log = new LogsGetAllResponse($row["id_visita"], $row["uniqueID"],$row["id_bitacora"], $row["id_instalacion"], $row["seccion"], $row["numero"], $row["nombre_visita"], $row["fecha_lectura"], $row["id_tipo_visita"], $row["id_tipo_ingreso"], $row["tipo_visita"], $row["tipo_ingreso"]);
                         array_push($logs, $log);
                     }
                 }
@@ -54,6 +75,7 @@
                 $query = "
                     SELECT 
                     v.id as id_visita, 
+                    v.uniqueID,
                     b.id as id_bitacora, 
                     i.id as id_instalacion, 
                     v.id_tipo_visita,
@@ -86,7 +108,7 @@
                 $logs = array();
                 if($resQuery && $resQuery->num_rows > 0) {
                     while($row = $resQuery->fetch_array()) {
-                        $log = new LogsGetAllResponse($row["id_visita"], $row["id_bitacora"], $row["id_instalacion"], $row["seccion"], $row["numero"], $row["nombre_visita"], $row["fecha_lectura"], $row["id_tipo_visita"], $row["id_tipo_ingreso"], $row["tipo_visita"], $row["tipo_ingreso"]);
+                        $log = new LogsGetAllResponse($row["id_visita"], $row["uniqueID"],$row["id_bitacora"], $row["id_instalacion"], $row["seccion"], $row["numero"], $row["nombre_visita"], $row["fecha_lectura"], $row["id_tipo_visita"], $row["id_tipo_ingreso"], $row["tipo_visita"], $row["tipo_ingreso"]);
                         array_push($logs, $log);
                     }
                 }

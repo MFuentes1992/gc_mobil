@@ -21,6 +21,18 @@
             return $res;
         }
 
+        public function getLogsByVisitaId(string $visitaId) {
+            $res = $this->vigilanteRepository->getLogsByVisitaId($visitaId);
+            $arrayRes = array();
+            foreach($res as $log) {
+                array_push($arrayRes,array(
+                    "tipo_registro" => $log["tipo_registro"],
+                    "fecha_lectura" => $log["fecha_lectura"],
+                ));
+            }
+            return $arrayRes;
+        }
+
         public function getLogsByCasetaId(int $casetaId, int $tipoVisita, string $fechaInicio, string $fechaFin, int $tipoIngreso) {
             $res = null;
             if($tipoVisita == 0 && $fechaInicio == "" &&  $fechaFin == "" && $tipoIngreso == 0) {
@@ -34,6 +46,7 @@
                 $log->setFechaLectura(date("Y-m-d H:i:s", strtotime($log->getFechaLectura())));
                 array_push($arrayRes,array(
                     "id_visita" => $log->getIdVisita(),
+                    "uniqueID" => $log->getUniqueID(),
                     "id_bitacora" => $log->getIdBitacora(),
                     "id_instalacion" => $log->getIdInstalacion(),
                     "id_tipo_visita" => $log->getIdTipoVisita(),
