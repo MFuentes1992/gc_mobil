@@ -21,8 +21,7 @@
         $generalPath = $_SERVER['DOCUMENT_ROOT']. "/uploads/";
         $fileArraySize = sizeof($_FILES);
         $successCounter = 0;
-        $imageUrlArray = array();
-        var_dump($_FILES);
+        $imageUrlArray = array();        
         foreach($_FILES as $file){
             $fileName = $uniqueId."_". $idVehiculo."_" ."attachment_". $file['name'];
             $path = $generalPath . $fileName;
