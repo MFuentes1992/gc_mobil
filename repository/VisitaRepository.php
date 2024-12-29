@@ -395,6 +395,15 @@
                 }
             }
 
+            public function getImageByuri(string $uri) {
+                try {
+                    $query = sprintf("SELECT * FROM `visitas_evidencia` WHERE `archivo` = '%s'", $uri);
+                    return $this->execQuery($query);
+                } catch (\Throwable $th) {
+                    echo $th;
+                }
+            }
+
             /**
              * Id: primary key of the visitas_evidencia record
              */

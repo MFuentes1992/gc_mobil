@@ -294,10 +294,15 @@
         public function saveImageAttached($imagesUrls) {
             $resCounter = 0;
             foreach($imagesUrls as $imageUrl) {
+                $rawQuery = $this->visitaRepository->getImageByuri($imageUrl->getUrl());
+                $existingImage = $rawQuery->fetch_array();
+                if($existingImage) {
+                    return;
+                }
                 $res = $this->visitaRepository->saveImageUrl($imageUrl->getIdVehiculoPedestrian(), $imageUrl->getTipoEvidencia(), $imageUrl->getUrl());
                 if($res) {
                     $resCounter++;
-                }
+                }  
             }
             if($resCounter == sizeof($imagesUrls)) {
                 return true;
