@@ -305,5 +305,10 @@
                 return false;
             }
         }
+
+        public function removeAttachedImage($id) {
+            $res = $this->visitaRepository->removeImageUrl($id);
+            return $res;
+        }
     }
 ?>

@@ -4,8 +4,8 @@
      *  */ 
     require_once $_SERVER['DOCUMENT_ROOT']."/service/VisitaService.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/model/ImageUrlModel.php";
-    if(isset($_POST)){
-        session_start();
+    session_start();
+    if(isset($_POST["uniqueId"])){        
         $uniqueId = $_POST['uniqueId'];
         $idVehiculo = $_POST['idVehiculo'];
         $idPedestrian = $_POST['idPeaton'];
@@ -47,6 +47,18 @@
                 $res = array("message" => "Error al guardar en la base de datos", "code" => 400);
                 echo json_encode($res);
             }
+        }
+    } else if(isset($_GET["id"])) {
+        $service = new VisitaService();
+        $id = $_GET['id'];        
+        $images = $service->removeAttachedImage($id);
+        if($images){
+            header("HTTP/1.1 200 OK");
+            $msg = array("message" => "Imagen eliminada correctamente", "code" => 200);
+            echo json_encode($msg);
+        } else {
+            header("HTTP/1.1 400 ERROR");
+            echo json_encode(array("error" => "Error al eliminar las imagenes"));
         }
     }
 
