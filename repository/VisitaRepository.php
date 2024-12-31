@@ -395,7 +395,7 @@
                 }
             }
 
-            public function getImageByuri(string $uri) {
+            public function getImageByUri(string $uri) {
                 try {
                     $query = sprintf("SELECT * FROM `visitas_evidencia` WHERE `archivo` = '%s'", $uri);
                     return $this->execQuery($query);
@@ -404,12 +404,13 @@
                 }
             }
 
+
             /**
              * Id: primary key of the visitas_evidencia record
              */
-            public function removeImageUrl(int $id) {
+            public function removeImageUrl(string $uri) {
                 try {
-                    $query = sprintf("DELETE FROM `visitas_evidencia` WHERE `id` = %d", $id);
+                    $query = sprintf("DELETE FROM `visitas_evidencia` WHERE `archivo` = '%s'", $uri);
                     return $this->execQuery($query);
                 } catch (\Throwable $th) {
                     echo $th;

@@ -5,30 +5,46 @@
     require_once $_SERVER['DOCUMENT_ROOT']."/service/VisitaService.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/model/ImageUrlModel.php";
     session_start();
-    if(isset($_POST["uniqueId"])){        
-        $uniqueId = $_POST['uniqueId'];
-        $idVehiculo = $_POST['idVehiculo'];
-        $idPedestrian = $_POST['idPeaton'];
-        $tipoEvidencia = $_POST['tipoEvidencia'];
-
-        if(!isset($uniqueId) || !isset($tipoEvidencia) || (!isset($idVehiculo) && !isset($idPedestrian))){
+    if(isset($_POST["id"])) {        
+        $id = $_POST['id'];
+        if( !isset($id) ){
             header("HTTP/1.1 400 ERROR");
             echo json_encode(array("error" => "Por favor, agregue los parametros necesarios"));
             return;
         }
-
         $service = new VisitaService();
         $generalPath = $_SERVER['DOCUMENT_ROOT']. "/uploads/";
         $fileArraySize = sizeof($_FILES);
         $successCounter = 0;
-        $imageUrlArray = array();        
+        $imageUrlArray = array();  
+              
         foreach($_FILES as $file){
-            $fileName = $uniqueId."_". $idVehiculo."_" ."attachment_". $file['name'];
+            $index = strchr($file['name'], ".");
+            $extension = substr($index, 1);
+            $fileName = "tmp_".$id."_".$successCounter.".".$extension;
             $path = $generalPath . $fileName;
+            
+            /* if($extension != "jpg" && $extension != "jpeg" && $extension != "png" && $extension != "gif"){
+                header("HTTP/1.1 400 ERROR");
+                echo json_encode(array("error" => "Formato de archivo no permitido"));
+                return;
+            }
+
+            if($extension == "jpeg"){
+                $image = imagecreatefromjpeg($file['tmp_name']);
+            } else if($extension == "png"){
+                $image = imagecreatefrompng($file['tmp_name']);
+            } else if($extension == "gif"){
+                $image = imagecreatefromgif($file['tmp_name']);
+            } else {
+                $image = imagecreatefromjpeg($file['tmp_name']);
+            }
+
+            $created = imagejpeg($image, $file['tmp_name'], 100); */
+
             $created = move_uploaded_file($file['tmp_name'], $path);
             if($created){
-                $successCounter++;
-                array_push($imageUrlArray, new ImageUrlModel($tipoEvidencia, isset($idVehiculo) ? $idVehiculo : $idPedestrian, "uploads/".$fileName));
+                $successCounter++;                
             }
         }        
         
@@ -36,22 +52,15 @@
             header("HTTP/1.1 400 ERROR");
             echo json_encode(array("error" => "Error al subir el archivo"));
         } else {            
-            $dbSaved = $service->saveImageAttached($imageUrlArray);
-            if($dbSaved){
-                header("HTTP/1.1 200 ERROR");
-                $res = array("message" => "Archivos guardados correctamente", "path" => "uploads/", "code" => 200);
-                echo json_encode($res);
-            } else {
-                header("HTTP/1.1 400 ERROR");
-                $res = array("message" => "Error al guardar en la base de datos", "code" => 400);
-                echo json_encode($res);
-            }
+            $res = array("message" => "Archivos guardados correctamente", "path" => "uploads/", "code" => 200);
+            echo json_encode($res);
         }
-    } else if(isset($_GET["id"])) {
+    } else if(isset($_GET["uri"])) {
         $service = new VisitaService();
-        $id = $_GET['id'];        
-        $images = $service->removeAttachedImage($id);
+        $uri = $_GET['uri'];        
+        $images = $service->removeAttachedImage($uri);
         if($images){
+            unlink($_SERVER['DOCUMENT_ROOT']."/".$uri);
             header("HTTP/1.1 200 OK");
             $msg = array("message" => "Imagen eliminada correctamente", "code" => 200);
             echo json_encode($msg);
