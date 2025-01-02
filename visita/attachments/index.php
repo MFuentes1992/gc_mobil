@@ -24,24 +24,6 @@
             $fileName = "tmp_".$id."_".$successCounter.".".$extension;
             $path = $generalPath . $fileName;
             
-            /* if($extension != "jpg" && $extension != "jpeg" && $extension != "png" && $extension != "gif"){
-                header("HTTP/1.1 400 ERROR");
-                echo json_encode(array("error" => "Formato de archivo no permitido"));
-                return;
-            }
-
-            if($extension == "jpeg"){
-                $image = imagecreatefromjpeg($file['tmp_name']);
-            } else if($extension == "png"){
-                $image = imagecreatefrompng($file['tmp_name']);
-            } else if($extension == "gif"){
-                $image = imagecreatefromgif($file['tmp_name']);
-            } else {
-                $image = imagecreatefromjpeg($file['tmp_name']);
-            }
-
-            $created = imagejpeg($image, $file['tmp_name'], 100); */
-
             $created = move_uploaded_file($file['tmp_name'], $path);
             if($created){
                 $successCounter++;                
