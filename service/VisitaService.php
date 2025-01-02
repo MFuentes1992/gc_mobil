@@ -100,12 +100,12 @@
             $pedestrians = array();
             foreach($vehicleArr as $vehicle) {
                 $existingVehicle = $this->vehicleRepository->getVehicleById($vehicle["id"]);                
-                $vehicleModel = new Vehicle($existingVehicle == null ? 0 : $existingVehicle->getId(), $idVisita, $vehicle["conductor"], $vehicle["marca"], $vehicle["modelo"], $vehicle["anio"], $vehicle["placas"], $vehicle["color"],"", "", $vehicle["estatusRegistro"]);
+                $vehicleModel = new Vehicle($existingVehicle == null ? $vehicle["id"] : $existingVehicle->getId(), $idVisita, $vehicle["conductor"], $vehicle["marca"], $vehicle["modelo"], $vehicle["anio"], $vehicle["placas"], $vehicle["color"],"", "", $vehicle["estatusRegistro"]);
                 array_push($vehicles, $vehicleModel);
             }
             foreach($pedestriansArr as $pedestrian) {
                 $existingPedestrian = $this->visitaPeatonRepository->getVisitaPeatonById($pedestrian["id"]);                
-                $pedestrianModel = new VisitasPeaton($existingPedestrian == null ? 0 : $pedestrian["id"], $idVisita, $pedestrian["nombre"], "", "", $pedestrian["estatusRegistro"]);
+                $pedestrianModel = new VisitasPeaton($existingPedestrian == null ? $pedestrian["id"] : $existingPedestrian->getId(), $idVisita, $pedestrian["nombre"], "", "", $pedestrian["estatusRegistro"]);
                 array_push($pedestrians, $pedestrianModel);
             }
             $currentVisita->setVehicles($vehicles);
