@@ -7,6 +7,7 @@
     require_once $_SERVER['DOCUMENT_ROOT']."/repository/VehicleRepository.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/model/VehicleModel.php";
     require_once $_SERVER['DOCUMENT_ROOT']."/sessionManager/SessionManager.php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/model/ImageUrlModel.php";
     
     Class VisitaService {
         private $bitacoraRepository;
@@ -23,6 +24,29 @@
             $this->visitaPeatonRepository = new VisitaPeatonRepository($connValues["dbUrl"], $connValues["user"], $connValues["password"], $connValues["dbName"]);
         }
 
+        public function createImageUrl(VisitaObjectModel $visitaObjectModel) {          
+            $imagesUrls = array();
+            foreach($visitaObjectModel->getVehicles() as $vehicle) {
+                $dbVehicle = $this->vehicleRepository->getVehicleByPlates($vehicle->getPlacas());
+                $regex = "tmp_".$vehicle->getId()."*";                
+                foreach(glob($_SERVER['DOCUMENT_ROOT']."/uploads/".$regex) as $file) {                    
+                    $index = strchr($file, "/uploads/"); 
+                    array_push($imagesUrls, new ImageUrlModel("vehiculo", $dbVehicle->getId(), substr($index, 1)));
+                }                     
+            }
+
+            foreach($visitaObjectModel->getPedestrians() as $pedestrian) {
+                $dbPedestrian = $this->visitaPeatonRepository->getPeatonesByVisitaUniqueId($visitaObjectModel->getUniqueID());
+                $regex = "tmp_".$pedestrian->getId()."*";                
+                foreach(glob($_SERVER['DOCUMENT_ROOT']."/uploads/".$regex) as $file) {
+                    $index = strchr($file, "/uploads/");                    
+                    array_push($imagesUrls, new ImageUrlModel("peaton", $dbPedestrian->getId(), substr($index, 1)));
+                }                     
+            }
+
+            $this->saveImageAttached($imagesUrls);
+        }
+
         public function createVisita(int $idUsuario, int $idTipoVisita, int $idTipoIngreso, int $idInstalacion, string $fechaIngreso, 
         string $fechaSalida, int $multipleEntrada, int $notificaciones, int $appGenerado, int $vigenciaQR, string $nombreVisita, 
         int $estatusRegistro, string $vehicles, string $pedestrians) {
@@ -32,11 +56,11 @@
             $vehicles = array();
             $pedestrians = array();
             foreach($vehicleArr as $vehicle) {
-                $vehicleModel = new Vehicle(0, 0, $vehicle["conductor"], $vehicle["marca"], $vehicle["modelo"], $vehicle["anio"], $vehicle["placas"], $vehicle["color"],"", "", 1);
+                $vehicleModel = new Vehicle($vehicle["id"], 0, $vehicle["conductor"], $vehicle["marca"], $vehicle["modelo"], $vehicle["anio"], $vehicle["placas"], $vehicle["color"],"", "", 1);
                 array_push($vehicles, $vehicleModel);
             }
             foreach($pedestriansArr as $pedestrian) {
-                $pedestrianModel = new VisitasPeaton(0, 0, $pedestrian["nombre"], "", "", 1);
+                $pedestrianModel = new VisitasPeaton($pedestrian["id"], 0, $pedestrian["nombre"], "", "", 1);
                 array_push($pedestrians, $pedestrianModel);
             }
             $visitaObjectModel->init(
@@ -60,8 +84,10 @@
                 $pedestrians
             );
             $res = $this->visitaRepository->createVisita($visitaObjectModel);
+            if($res) {                
+                $this->createImageUrl($visitaObjectModel);                             
+            }
             return $res;
-
         }
 
         public function updateVisita(int $idVisita, int $idTipoVisita, int $idTipoIngreso, string $fechaIngreso, 
@@ -74,12 +100,12 @@
             $pedestrians = array();
             foreach($vehicleArr as $vehicle) {
                 $existingVehicle = $this->vehicleRepository->getVehicleById($vehicle["id"]);                
-                $vehicleModel = new Vehicle($existingVehicle == null ? 0 : $existingVehicle->getId(), $idVisita, $vehicle["conductor"], $vehicle["marca"], $vehicle["modelo"], $vehicle["anio"], $vehicle["placas"], $vehicle["color"],"", "", $vehicle["estatusRegistro"]);
+                $vehicleModel = new Vehicle($existingVehicle == null ? $vehicle["id"] : $existingVehicle->getId(), $idVisita, $vehicle["conductor"], $vehicle["marca"], $vehicle["modelo"], $vehicle["anio"], $vehicle["placas"], $vehicle["color"],"", "", $vehicle["estatusRegistro"]);
                 array_push($vehicles, $vehicleModel);
             }
             foreach($pedestriansArr as $pedestrian) {
                 $existingPedestrian = $this->visitaPeatonRepository->getVisitaPeatonById($pedestrian["id"]);                
-                $pedestrianModel = new VisitasPeaton($existingPedestrian == null ? 0 : $pedestrian["id"], $idVisita, $pedestrian["nombre"], "", "", $pedestrian["estatusRegistro"]);
+                $pedestrianModel = new VisitasPeaton($existingPedestrian == null ? $pedestrian["id"] : $existingPedestrian->getId(), $idVisita, $pedestrian["nombre"], "", "", $pedestrian["estatusRegistro"]);
                 array_push($pedestrians, $pedestrianModel);
             }
             $currentVisita->setVehicles($vehicles);
@@ -94,6 +120,9 @@
             $currentVisita->setEstatusRegistro($estatusRegistro);
 
             $res = $this->visitaRepository->updateVisita($currentVisita);
+            if($res) {
+                $this->createImageUrl($currentVisita);                             
+            }
             return $res;
         }
 
@@ -292,9 +321,12 @@
         }
 
         public function saveImageAttached($imagesUrls) {
+            if(sizeof($imagesUrls) == 0) {
+                return true;
+            }   
             $resCounter = 0;
             foreach($imagesUrls as $imageUrl) {
-                $rawQuery = $this->visitaRepository->getImageByuri($imageUrl->getUrl());
+                $rawQuery = $this->visitaRepository->getImageByUri($imageUrl->getUrl());
                 $existingImage = $rawQuery->fetch_array();
                 if($existingImage) {
                     return;
@@ -311,8 +343,8 @@
             }
         }
 
-        public function removeAttachedImage($id) {
-            $res = $this->visitaRepository->removeImageUrl($id);
+        public function removeAttachedImage($uri) {
+            $res = $this->visitaRepository->removeImageUrl($uri);
             return $res;
         }
     }

@@ -234,7 +234,7 @@
                     if($res) {                                                                                   
                         foreach($visita->getVehicles() as $vehicle) {
                             $vehicleId = $vehicle->getId();
-                            if(isset($vehicleId) && $vehicleId > 0) {
+                            if(isset($vehicleId) && intval($vehicleId) > 0) {
                                 $vehicleDriver = $vehicle->getConductor();
                                 $vehicleBrand = $vehicle->getMarca();
                                 $vehicleModel = $vehicle->getModelo();
@@ -263,7 +263,11 @@
 
                         foreach($visita->getPedestrians() as $pedestrian) {
                             $pedestrianId = $pedestrian->getId();
-                            if(isset($pedestrianId) && $pedestrianId > 0) {
+                            $pattern = "/[a-zA-Z]/";
+                            if(preg_match($pattern, $pedestrianId)) {
+                                $pedestrianId = 0;
+                            }
+                            if(isset($pedestrianId) && intval($pedestrianId) > 0) {
                                 $pedestrianName = $pedestrian->getNombre();
                                 $this->updatePedestrian($pedestrianId, $pedestrianName, 1);
                             } else {
@@ -395,7 +399,7 @@
                 }
             }
 
-            public function getImageByuri(string $uri) {
+            public function getImageByUri(string $uri) {
                 try {
                     $query = sprintf("SELECT * FROM `visitas_evidencia` WHERE `archivo` = '%s'", $uri);
                     return $this->execQuery($query);
@@ -404,12 +408,13 @@
                 }
             }
 
+
             /**
              * Id: primary key of the visitas_evidencia record
              */
-            public function removeImageUrl(int $id) {
+            public function removeImageUrl(string $uri) {
                 try {
-                    $query = sprintf("DELETE FROM `visitas_evidencia` WHERE `id` = %d", $id);
+                    $query = sprintf("DELETE FROM `visitas_evidencia` WHERE `archivo` = '%s'", $uri);
                     return $this->execQuery($query);
                 } catch (\Throwable $th) {
                     echo $th;
