@@ -6,6 +6,7 @@
         private $fechaRegistro;
         private $fechaActualizacion;
         private $estatusRegistro;
+        private $attachedFiles;
 
         public function __construct($id, $idVisita, $nombre, $fechaRegistro, $fechaActualizacion, $estatusRegistro) {
             $this->id = $id;
@@ -40,6 +41,10 @@
             return $this->estatusRegistro;
         }
 
+        public function getAttachedFiles() {
+            return $this->attachedFiles;
+        }
+
         public function setId($id) {
             $this->id = $id;
         }
@@ -62,6 +67,10 @@
 
         public function setEstatusRegistro($estatusRegistro) {
             $this->estatusRegistro = $estatusRegistro;
+        }
+
+        public function setAttachedFiles($attachedFiles) {
+            $this->attachedFiles = $attachedFiles;
         }
 
         public function toString() {

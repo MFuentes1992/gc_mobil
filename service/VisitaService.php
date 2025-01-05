@@ -262,6 +262,19 @@
 
             $vehiclesArr = array();
             foreach($visitaResponse->getVehicles() as $vehicle) {
+                $attachments = array();
+                foreach($vehicle->getAttachedFiles() as $attachedFile) {
+                    array_push($attachments, array(
+                        "id" => $attachedFile->getId(),
+                        "tipoEvidencia" => $attachedFile->getTipoEvidencia(),
+                        "idVehiculo" => $attachedFile->getIdVehiculo(),
+                        "idPeaton" => $attachedFile->getIdPeaton(),
+                        "archivo" => $attachedFile->getArchivo(),
+                        "fechaRegistro" => $attachedFile->getFechaRegistro(),
+                        "fechaActualizacion" => $attachedFile->getFechaActualizacion(),
+                        "estatusRegistro" => $attachedFile->getEstatusRegistro(
+                        )));
+                }
                 $vehicleArr = array(
                     "id" => $vehicle->getId(),
                     "idVisita" => $vehicle->getIdVisita(),
@@ -273,19 +286,34 @@
                     "color" => $vehicle->getColor(),
                     "fechaRegistro" => $vehicle->getFechaRegistro(),
                     "fechaActualizacion" => $vehicle->getFechaActualizacion(),
-                    "estatusRegistro" => $vehicle->getEstatusRegistro()
+                    "estatusRegistro" => $vehicle->getEstatusRegistro(),
+                    "attachedFiles" => $attachments
                 );
                 array_push($vehiclesArr, $vehicleArr);
             }
             $pedestriansArr = array();
             foreach($visitaResponse->getPedestrians() as $pedestrian) {
+                $attachments = array();
+                foreach($pedestrian->getAttachedFiles() as $attachedFile) {
+                    array_push($attachments, array(
+                        "id" => $attachedFile->getId(),
+                        "tipoEvidencia" => $attachedFile->getTipoEvidencia(),
+                        "idVehiculo" => $attachedFile->getIdVehiculo(),
+                        "idPeaton" => $attachedFile->getIdPeaton(),
+                        "archivo" => $attachedFile->getArchivo(),
+                        "fechaRegistro" => $attachedFile->getFechaRegistro(),
+                        "fechaActualizacion" => $attachedFile->getFechaActualizacion(),
+                        "estatusRegistro" => $attachedFile->getEstatusRegistro(
+                        )));
+                }
                 $pedestrianArr = array(
                     "id" => $pedestrian->getId(),
                     "idVisita" => $pedestrian->getIdVisita(),
                     "nombre" => $pedestrian->getNombre(),
                     "fechaRegistro" => $pedestrian->getFechaRegistro(),
                     "fechaActualizacion" => $pedestrian->getFechaActualizacion(),
-                    "estatusRegistro" => $pedestrian->getEstatusRegistro()
+                    "estatusRegistro" => $pedestrian->getEstatusRegistro(),
+                    "attachedFiles" => $attachments
                 );
                 array_push($pedestriansArr, $pedestrianArr);
             }

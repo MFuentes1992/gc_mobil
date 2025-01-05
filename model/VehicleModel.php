@@ -11,6 +11,7 @@
         private $fechaRegistro;
         private $fechaActualizacion;
         private $estatusRegistro;
+        private $attachedFiles;
 
         public function __construct($id, $idVisita, $conductor, $marca, $modelo, $anio, $placas, $color, $fechaRegistro, $fechaActualizacion, $estatusRegistro) {
             $this->id = $id;
@@ -70,6 +71,10 @@
             return $this->estatusRegistro;
         }
 
+        public function getAttachedFiles() {
+            return $this->attachedFiles;
+        }
+
         public function setId($id) {
             $this->id = $id;
         }
@@ -114,8 +119,12 @@
             $this->estatusRegistro = $estatusRegistro;
         }
 
+        public function setAttachedFiles($attachedFiles) {
+            $this->attachedFiles = $attachedFiles;
+        }
+
         public function toString() {
-            return "id: ".$this->id.", idVisita: ".$this->idVisita.", conductor: ".$this->conductor.", marca: ".$this->marca.", modelo: ".$this->modelo.", anio: ".$this->anio.", placas: ".$this->placas.", color: ".$this->color.", fechaRegistro: ".$this->fechaRegistro.", fechaActualizacion: ".$this->fechaActualizacion.", estatusRegistro: ".$this->estatusRegistro;
+            return "id: ".$this->id.", idVisita: ".$this->idVisita.", conductor: ".$this->conductor.", marca: ".$this->marca.", modelo: ".$this->modelo.", anio: ".$this->anio.", placas: ".$this->placas.", color: ".$this->color.", fechaRegistro: ".$this->fechaRegistro.", fechaActualizacion: ".$this->fechaActualizacion.", estatusRegistro: ".$this->estatusRegistro . ", attachedFiles: " . $this->attachedFiles;
         }
     }
 

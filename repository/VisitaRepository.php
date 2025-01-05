@@ -4,6 +4,7 @@
         require_once $_SERVER['DOCUMENT_ROOT']."/model/VisitaPeatonModel.php";
         require_once $_SERVER['DOCUMENT_ROOT']."/model/response/VisitaResponse.php";
         require_once $_SERVER['DOCUMENT_ROOT']."/model/VehicleModel.php";
+        require_once $_SERVER['DOCUMENT_ROOT']."/model/AttachmentModel.php";
 
         Class VisitaRepository extends Connection {
             private $table = "visitas";
@@ -118,6 +119,23 @@
                         $pedestriansArray = array();
                         if($vehicles && $vehicles->num_rows > 0) {
                             while($row = $vehicles->fetch_array()) {
+                                $attachmentRaw = $this->getAttachmentByVehiclePedestrianId($row["id"]);
+                                $attachments = array();
+                                if($attachmentRaw && $attachmentRaw->num_rows > 0) {
+                                    while($rowAttachment = $attachmentRaw->fetch_array()) {
+                                        $attachment = new Attachment(
+                                            $rowAttachment["id"],
+                                            $rowAttachment["tipo_evidencia"],
+                                            $rowAttachment["id_vehiculo_peaton"],
+                                            0,
+                                            $rowAttachment["archivo"],
+                                            $rowAttachment["fecha_registro"],
+                                            $rowAttachment["fecha_actualizacion"],
+                                            $rowAttachment["estatus_registro"]
+                                        );
+                                        array_push($attachments, $attachment);
+                                    }
+                                }
                                 $vehicle = new Vehicle(
                                     $row["id"],
                                     $row["id_visita"],
@@ -131,11 +149,29 @@
                                     $row["fecha_actualizacion"],
                                     $row["estatus_registro"]
                                 );
+                                $vehicle->setAttachedFiles($attachments);
                                 array_push($vehiclesArray, $vehicle);
                             }
                         }
                         if($pedestrians && $pedestrians->num_rows > 0) {
                             while($row = $pedestrians->fetch_array()) {
+                                $attachmentRaw = $this->getAttachmentByVehiclePedestrianId($row["id"]);
+                                $attachments = array();
+                                if($attachmentRaw && $attachmentRaw->num_rows > 0) {
+                                    while($rowAttachment = $attachmentRaw->fetch_array()) {
+                                        $attachment = new Attachment(
+                                            $rowAttachment["id"],
+                                            $rowAttachment["tipo_evidencia"],
+                                            0,
+                                            $rowAttachment["id_vehiculo_peaton"],
+                                            $rowAttachment["archivo"],
+                                            $rowAttachment["fecha_registro"],
+                                            $rowAttachment["fecha_actualizacion"],
+                                            $rowAttachment["estatus_registro"]
+                                        );
+                                        array_push($attachments, $attachment);
+                                    }
+                                }
                                 $pedestrian = new VisitasPeaton(
                                     $row["id"],
                                     $row["id_visita"],
@@ -144,6 +180,7 @@
                                     $row["fecha_actualizacion"],
                                     $row["estatus_registro"]
                                 );
+                                $pedestrian->setAttachedFiles($attachments);
                                 array_push($pedestriansArray, $pedestrian);
                             }
                         }
@@ -384,6 +421,15 @@
             public function getPedestriansByVisit(int $idVisita) {
                 try {
                     $query = sprintf("SELECT * FROM `visitas_peatones` WHERE `id_visita` = %d AND `estatus_registro` = 1", $idVisita);
+                    return $this->execQuery($query);
+                } catch (\Throwable $th) {
+                    echo $th;
+                }
+            }
+
+            public function getAttachmentByVehiclePedestrianId(int $idVehicle) {
+                try {
+                    $query = sprintf("SELECT * FROM `visitas_evidencia` WHERE `id_vehiculo_peaton` = %d", $idVehicle);
                     return $this->execQuery($query);
                 } catch (\Throwable $th) {
                     echo $th;
